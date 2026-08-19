@@ -66,7 +66,7 @@ function DeleteButton({
   label,
   onWarn,
 }: {
-  inUse?: boolean;
+  inUse?: boolean | undefined;
   onDelete: () => void;
   label: string;
   onWarn: () => void;
