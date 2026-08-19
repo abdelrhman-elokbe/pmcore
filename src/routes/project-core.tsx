@@ -24,7 +24,7 @@ export const Route = createFileRoute("/project-core")({
       },
     ],
   }),
-  component: ProjectCoreAdmin;
+  component: ProjectCoreAdmin,
 });
 
 const screens = [
