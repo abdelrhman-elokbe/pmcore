@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IdentityRouteImport } from './routes/identity'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as ProjectCoreRouteImport } from './routes/project-core'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 
@@ -36,6 +37,11 @@ const ProductsRoute = ProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectCoreRoute = ProjectCoreRouteImport.update({
+  id: '/project-core',
+  path: '/project-core',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
   '/products': typeof ProductsRoute
+  '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
   '/workflows': typeof WorkflowsRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
   '/products': typeof ProductsRoute
+  '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
   '/workflows': typeof WorkflowsRoute
 }
@@ -69,21 +77,36 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
   '/products': typeof ProductsRoute
+  '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
   '/workflows': typeof WorkflowsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/audit' | '/identity' | '/products' | '/settings' | '/workflows'
+    | '/'
+    | '/audit'
+    | '/identity'
+    | '/products'
+    | '/project-core'
+    | '/settings'
+    | '/workflows'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/audit' | '/identity' | '/products' | '/settings' | '/workflows'
+  to:
+    | '/'
+    | '/audit'
+    | '/identity'
+    | '/products'
+    | '/project-core'
+    | '/settings'
+    | '/workflows'
   id:
     | '__root__'
     | '/'
     | '/audit'
     | '/identity'
     | '/products'
+    | '/project-core'
     | '/settings'
     | '/workflows'
   fileRoutesById: FileRoutesById
@@ -93,6 +116,7 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   IdentityRoute: typeof IdentityRoute
   ProductsRoute: typeof ProductsRoute
+  ProjectCoreRoute: typeof ProjectCoreRoute
   SettingsRoute: typeof SettingsRoute
   WorkflowsRoute: typeof WorkflowsRoute
 }
@@ -127,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project-core': {
+      id: '/project-core'
+      path: '/project-core'
+      fullPath: '/project-core'
+      preLoaderRoute: typeof ProjectCoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -149,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   IdentityRoute: IdentityRoute,
   ProductsRoute: ProductsRoute,
+  ProjectCoreRoute: ProjectCoreRoute,
   SettingsRoute: SettingsRoute,
   WorkflowsRoute: WorkflowsRoute,
 }

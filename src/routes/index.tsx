@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Users, UserCheck, FileClock, Heart } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 
@@ -137,7 +137,16 @@ function Dashboard() {
               {products.map((p) => (
                 <div key={p.name} className="rounded-2xl border border-border p-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-foreground">{p.name}</h3>
+                    {p.name === "Project Core" ? (
+                      <Link
+                        to="/project-core"
+                        className="font-semibold text-primary underline-offset-4 hover:underline"
+                      >
+                        {p.name}
+                      </Link>
+                    ) : (
+                      <h3 className="font-semibold text-foreground">{p.name}</h3>
+                    )}
                     <span className="rounded-md bg-success-soft px-2 py-1 text-xs font-semibold text-success">
                       Active
                     </span>
