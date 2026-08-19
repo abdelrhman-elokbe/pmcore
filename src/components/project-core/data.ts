@@ -152,6 +152,14 @@ export type FeatureSection = {
 const on = (names: string[], offIdx: number[] = []) =>
   names.map((name, i) => ({ name, enabled: !offIdx.includes(i) }));
 
+export const pmDashboardSection: FeatureSection = {
+  id: "pm-dashboard",
+  title: "PM Dashboard",
+  icon: Gauge,
+  tone: "text-navy bg-muted",
+  items: [{ name: "PM Dashboard — Enable or disable the PM Dashboard for this client.", enabled: true }],
+};
+
 export const initialFeatureSections: FeatureSection[] = [
   {
     id: "dashboard",
@@ -228,14 +236,6 @@ export const initialFeatureSections: FeatureSection[] = [
   },
   pmDashboardSection,
 ];
-
-export const pmDashboardSection: FeatureSection = {
-  id: "pm-dashboard",
-  title: "PM Dashboard",
-  icon: Gauge,
-  tone: "text-navy bg-muted",
-  items: [{ name: "PM Dashboard — Enable or disable the PM Dashboard for this client.", enabled: true }],
-};
 
 export type Role = {
   id: string;
