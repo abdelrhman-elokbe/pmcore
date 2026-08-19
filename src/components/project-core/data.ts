@@ -349,3 +349,179 @@ export const permissionFeatures = [
   "PMO Reports",
   "Configurations",
 ];
+
+/* ---------- Stage config data ---------- */
+
+export const proposalRequiredFields = [
+  "Project name",
+  "Description",
+  "Rationale",
+  "Objective",
+  "In scope",
+  "Out of scope",
+  "Category",
+  "Type",
+  "Source",
+  "Budget",
+  "Strategic KPIs",
+  "Risks",
+  "Benefits",
+];
+
+export const bcFinancialFields = ["ROI", "NPV", "IRR"];
+
+export const scheduleComponents = ["Phases", "Milestones", "Deliverables", "Tasks"];
+
+export const crTypes = [
+  "Project Profile",
+  "Ownership and Strategic Impact",
+  "Schedule",
+  "Scope",
+  "Cost",
+  "Benefits",
+];
+
+export const healthDeductionRules: { name: string; points: number }[] = [
+  { name: "Unjustified CR — Scope", points: -10 },
+  { name: "Returned CR", points: -3 },
+  { name: "Unjustified CR — Schedule", points: -10 },
+  { name: "Phase delay per week", points: -10 },
+  { name: "Risk delay per week", points: -3 },
+  { name: "Unjustified CR — Budget", points: -10 },
+  { name: "Budget deviation >10%", points: -5 },
+  { name: "Budget deviation >15%", points: -10 },
+  { name: "Budget deviation >20%", points: -15 },
+  { name: "Deliverable returned for correction", points: -5 },
+  { name: "Deliverable rejected", points: -10 },
+];
+
+/* ---------- FS Assessment types ---------- */
+
+export type AssessmentParameter = {
+  id: string;
+  name: string;
+  info: string;
+  active: boolean;
+  inUse?: boolean;
+};
+export type AssessmentCategory = {
+  id: string;
+  name: string;
+  active: boolean;
+  inUse?: boolean;
+  parameters: AssessmentParameter[];
+};
+export type AssessmentType = {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  inUse?: boolean;
+  categories: AssessmentCategory[];
+};
+
+const param = (id: string, name: string, info: string, inUse = false): AssessmentParameter => ({
+  id,
+  name,
+  info,
+  active: true,
+  inUse,
+});
+
+export const initialAssessmentTypes: AssessmentType[] = [
+  {
+    id: "legal",
+    name: "Legal Assessment",
+    description: "Regulatory, governance and compliance readiness",
+    active: true,
+    inUse: true,
+    categories: [
+      {
+        id: "legal-reg",
+        name: "Regulatory and Compliance",
+        active: true,
+        inUse: true,
+        parameters: [
+          param("l1", "Licensing requirements", "Permits required before execution", true),
+          param("l2", "Data protection compliance", "Alignment with PDPL"),
+        ],
+      },
+      {
+        id: "legal-gov",
+        name: "Governance and Ownership",
+        active: true,
+        parameters: [
+          param("l3", "Ownership clarity", "Asset and IP ownership defined"),
+          param("l4", "Contractual model", "Preferred contracting approach"),
+        ],
+      },
+      {
+        id: "legal-inn",
+        name: "Innovation and Technology",
+        active: true,
+        parameters: [param("l5", "IP protection", "Patent or trademark exposure")],
+      },
+    ],
+  },
+  {
+    id: "technical",
+    name: "Technical Assessment",
+    description: "Technology readiness, architecture and data",
+    active: true,
+    categories: [
+      {
+        id: "tech-ready",
+        name: "Technology Readiness",
+        active: true,
+        parameters: [
+          param("t1", "Maturity level", "TRL 1–9 scale"),
+          param("t2", "Vendor availability", "Local supplier coverage"),
+        ],
+      },
+      {
+        id: "tech-arch",
+        name: "Architecture and Security",
+        active: true,
+        parameters: [
+          param("t3", "Integration complexity", "Number of systems impacted"),
+          param("t4", "Security classification", "Data sensitivity tier"),
+        ],
+      },
+      {
+        id: "tech-data",
+        name: "Data Management",
+        active: true,
+        parameters: [param("t5", "Data quality", "Availability and cleanliness of source data")],
+      },
+    ],
+  },
+  {
+    id: "organisational",
+    name: "Organisational Assessment",
+    description: "People, operations and strategy alignment",
+    active: true,
+    categories: [
+      {
+        id: "org-stake",
+        name: "Stakeholder Engagement",
+        active: true,
+        parameters: [param("o1", "Sponsor commitment", "Executive sponsorship strength")],
+      },
+      {
+        id: "org-ops",
+        name: "Operational Readiness",
+        active: true,
+        parameters: [
+          param("o2", "Change impact", "Scale of process change required"),
+          param("o3", "Resourcing", "Availability of delivery capacity"),
+        ],
+      },
+      {
+        id: "org-strategy",
+        name: "Strategic Alignment",
+        active: true,
+        parameters: [param("o4", "Objective linkage", "Mapped strategic objectives")],
+      },
+    ],
+  },
+];
