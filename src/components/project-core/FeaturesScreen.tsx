@@ -60,7 +60,7 @@ export function FeaturesScreen() {
                     key={item.name}
                     className={cn(
                       "flex items-center gap-3 rounded-xl border border-border px-4 py-3 transition-opacity",
-                      !item.enabled && "bg-muted/50 opacity-50",
+                      !item.enabled && "bg-muted/40 text-muted-foreground opacity-40",
                     )}
                   >
                     <input
@@ -70,7 +70,9 @@ export function FeaturesScreen() {
                       aria-label={`Select ${item.name}`}
                       className="size-4 accent-[var(--primary)]"
                     />
-                    <span className="text-sm text-foreground">{item.name}</span>
+                    <span className={cn("text-sm", item.enabled ? "text-foreground" : "text-muted-foreground")}>
+                      {item.name}
+                    </span>
                     <span className="ml-auto">
                       <Toggle
                         checked={item.enabled}

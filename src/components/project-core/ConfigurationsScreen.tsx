@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Palette, Globe2, Network, Activity, KeyRound } from "lucide-react";
+import { Palette, Globe2, Network, Activity, KeyRound, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
+import { AssessmentTypesSection } from "./AssessmentTypesSection";
 
 const primaryColors = ["#6d3ff5", "#0f9d8f", "#e4436f", "#f0932b", "#2c3a5a"];
 const secondaryColors = ["#8b5cf6", "#22c1a4", "#f472b6", "#fbbf24"];
@@ -79,7 +80,7 @@ export function ConfigurationsScreen() {
   const [primary, setPrimary] = useState(primaryColors[0]!);
   const [secondary, setSecondary] = useState(secondaryColors[0]!);
   const [green, setGreen] = useState(80);
-  const [yellow, setYellow] = useState(55);
+  const [yellow, setYellow] = useState(50);
 
   return (
     <div className="space-y-4">
@@ -153,6 +154,15 @@ export function ConfigurationsScreen() {
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader
+          icon={ListChecks}
+          title="FS Assessment Types"
+          tone="text-primary bg-primary-soft"
+        />
+        <AssessmentTypesSection />
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
+        <SectionHeader
           icon={Activity}
           title="Health score thresholds"
           tone="text-success bg-success-soft"
@@ -172,13 +182,26 @@ export function ConfigurationsScreen() {
             onChange={(v) => setYellow(Math.min(v, green - 1))}
             hint="Projects between this value and the green threshold are at risk."
           />
-          <Threshold
-            color="bg-destructive"
-            label="Red"
-            value={Math.max(yellow - 1, 0)}
-            disabled
-            hint="Computed automatically as everything below the yellow threshold."
-          />
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="size-2.5 shrink-0 rounded-full bg-destructive" />
+              <span className="w-20 shrink-0 text-sm font-medium text-foreground">Red</span>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.max(yellow - 1, 0)}
+                disabled
+                readOnly
+                aria-label="Red threshold"
+                className="h-1.5 flex-1 accent-[var(--primary)] opacity-50"
+              />
+              <span className="w-28 text-right text-xs text-muted-foreground">Automatic</span>
+            </div>
+            <p className="mt-1.5 pl-[38px] text-xs text-muted-foreground">
+              Computed automatically as everything below the yellow threshold.
+            </p>
+          </div>
         </div>
       </section>
 
