@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GripVertical, Plus, Check, RotateCcw, X } from "lucide-react";
+import { GripVertical, Plus, Check, RotateCcw, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   approvalChain,
@@ -90,7 +90,7 @@ function DetailPanel({
   const [scope, setScope] = useState("new");
 
   return (
-    <section className="mt-4 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+    <section className="mt-2 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
       <div className="bg-primary px-5 py-4">
         <p className="text-[15px] font-semibold text-primary-foreground">{stage.name}</p>
         <p className="text-xs text-primary-foreground/80">Stage configuration · Project Core</p>
@@ -233,7 +233,7 @@ function DetailPanel({
 export function StagesScreen() {
   const [stages, setStages] = useState<Stage[]>(initialStages);
   const [selected, setSelected] = useState<string | null>("feasibility");
-  const active = stages.find((s) => s.id === selected) ?? null;
+  
 
   const patch = (id: string, p: Partial<Stage>) =>
     setStages((prev) => prev.map((s) => (s.id === id ? { ...s, ...p } : s)));
@@ -244,56 +244,69 @@ export function StagesScreen() {
         {stages.map((stage, i) => {
           const isActive = stage.id === selected;
           return (
-            <div
-              key={stage.id}
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelected(stage.id)}
-              onKeyDown={(e) => e.key === "Enter" && setSelected(stage.id)}
-              className={cn(
-                "flex cursor-pointer flex-wrap items-center gap-3 rounded-2xl border px-4 py-3.5 transition-colors",
-                isActive
-                  ? "border-primary bg-primary-soft"
-                  : "border-border bg-card hover:bg-muted/50",
-                !stage.enabled && "opacity-60",
-              )}
-            >
-              <GripVertical className="size-4 cursor-grab text-muted-foreground" />
-              <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                {i + 1}
-              </span>
-              <div className="min-w-0">
-                <p className="text-[15px] font-semibold text-foreground">{stage.name}</p>
-                <p className="truncate text-xs text-muted-foreground">{stage.meta}</p>
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                <span
-                  className={cn(
-                    "rounded-full px-2.5 py-1 text-xs font-semibold",
-                    stage.mandatory
-                      ? "bg-secondary-soft text-secondary"
-                      : "bg-muted text-muted-foreground",
-                  )}
-                >
-                  {stage.mandatory ? "Mandatory" : "Optional"}
+            <div key={stage.id}>
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelected(isActive ? null : stage.id)}
+                onKeyDown={(e) => e.key === "Enter" && setSelected(isActive ? null : stage.id)}
+                className={cn(
+                  "flex cursor-pointer flex-wrap items-center gap-3 rounded-2xl border px-4 py-3.5 transition-colors",
+                  isActive
+                    ? "border-primary bg-primary-soft"
+                    : "border-border bg-card hover:bg-muted/50",
+                  !stage.enabled && "opacity-60",
+                )}
+              >
+                <GripVertical className="size-4 cursor-grab text-muted-foreground" />
+                <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  {i + 1}
                 </span>
-                <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-                  {stage.steps} steps
-                </span>
-                <span onClick={(e) => e.stopPropagation()}>
-                  <Toggle
-                    checked={stage.enabled}
-                    onChange={(v) => patch(stage.id, { enabled: v })}
-                    label={`Enable ${stage.name}`}
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-foreground">{stage.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{stage.meta}</p>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  <span
+                    className={cn(
+                      "rounded-full px-2.5 py-1 text-xs font-semibold",
+                      stage.mandatory
+                        ? "bg-secondary-soft text-secondary"
+                        : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {stage.mandatory ? "Mandatory" : "Optional"}
+                  </span>
+                  <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                    {stage.steps} steps
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      "size-4 text-muted-foreground transition-transform",
+                      isActive && "rotate-180",
+                    )}
                   />
-                </span>
+                  <span onClick={(e) => e.stopPropagation()}>
+                    <Toggle
+                      checked={stage.enabled}
+                      onChange={(v) => patch(stage.id, { enabled: v })}
+                      label={`Enable ${stage.name}`}
+                    />
+                  </span>
+                </div>
               </div>
+
+              {isActive ? (
+                <DetailPanel
+                  key={stage.id}
+                  stage={stage}
+                  onChange={(p) => patch(stage.id, p)}
+                />
+              ) : null}
             </div>
           );
         })}
       </div>
-
-      {active ? <DetailPanel stage={active} onChange={(p) => patch(active.id, p)} /> : null}
     </div>
   );
 }
