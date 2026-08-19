@@ -11,6 +11,7 @@ import {
   type Stage,
 } from "./data";
 import { CheckRow, Field, SelectField, TextField, Toggle } from "./primitives";
+import { StageConfig } from "./StageConfigPanels";
 
 const tabs = [
   "General",
@@ -75,132 +76,6 @@ function ApprovalStep({ index, name, role }: { index: number; name: string; role
         </span>
       </div>
     </div>
-  );
-}
-
-function StageConfig({ stage }: { stage: Stage }) {
-  const [fsTypes, setFsTypes] = useState([true, true]);
-  const [exec, setExec] = useState<Record<string, boolean>>({
-    Phases: true,
-    Milestones: true,
-    Deliverables: true,
-    Tasks: true,
-    "Gantt chart": false,
-    "CR types per type": true,
-  });
-  const [closure, setClosure] = useState({ strict: true, lessons: true });
-  const [reasons, setReasons] = useState(["Completed", "Cancelled", "Merged", "On hold"]);
-  const [reason, setReason] = useState("");
-
-  if (stage.config === "feasibility") {
-    return (
-      <div className="space-y-4">
-        <p className="text-sm font-medium text-foreground">FS types available</p>
-        <div className="grid gap-2 md:grid-cols-2">
-          {["Simplified", "Detailed"].map((t, i) => (
-            <CheckRow
-              key={t}
-              checked={fsTypes[i] ?? false}
-              onChange={(v) => setFsTypes((p) => p.map((x, j) => (j === i ? v : x)))}
-            >
-              {t}
-            </CheckRow>
-          ))}
-        </div>
-        <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-          Assessment types are managed from Configurations.
-        </p>
-      </div>
-    );
-  }
-
-  if (stage.config === "execution") {
-    return (
-      <div className="grid gap-2 md:grid-cols-2">
-        {Object.entries(exec).map(([k, v]) => (
-          <div
-            key={k}
-            className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
-          >
-            <span className="text-sm text-foreground">{k}</span>
-            <Toggle checked={v} onChange={(nv) => setExec((p) => ({ ...p, [k]: nv }))} label={k} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (stage.config === "closure") {
-    return (
-      <div className="space-y-4">
-        <div>
-          <p className="mb-2 text-sm font-medium text-foreground">Closure reasons</p>
-          <div className="flex flex-wrap gap-2">
-            {reasons.map((r) => (
-              <span
-                key={r}
-                className="flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1.5 text-sm font-medium text-accent-foreground"
-              >
-                {r}
-                <button
-                  type="button"
-                  aria-label={`Remove ${r}`}
-                  onClick={() => setReasons((p) => p.filter((x) => x !== r))}
-                >
-                  <X className="size-3.5" />
-                </button>
-              </span>
-            ))}
-          </div>
-          <form
-            className="mt-3 flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (!reason.trim()) return;
-              setReasons((p) => [...p, reason.trim()]);
-              setReason("");
-            }}
-          >
-            <TextField
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder="Add closure reason"
-              className="max-w-xs"
-            />
-            <button
-              type="submit"
-              className="h-11 rounded-xl border border-dashed border-primary px-4 text-sm font-semibold text-primary"
-            >
-              Add
-            </button>
-          </form>
-        </div>
-        <div className="grid gap-2 md:grid-cols-2">
-          <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
-            <span className="text-sm text-foreground">Strict prerequisites</span>
-            <Toggle
-              checked={closure.strict}
-              onChange={(v) => setClosure((p) => ({ ...p, strict: v }))}
-              label="Strict prerequisites"
-            />
-          </div>
-          <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
-            <span className="text-sm text-foreground">Lessons learned required</span>
-            <Toggle
-              checked={closure.lessons}
-              onChange={(v) => setClosure((p) => ({ ...p, lessons: v }))}
-              label="Lessons learned required"
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-      This stage has no stage-specific configuration.
-    </p>
   );
 }
 
