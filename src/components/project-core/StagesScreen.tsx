@@ -90,7 +90,7 @@ function DetailPanel({
   const [scope, setScope] = useState("new");
 
   return (
-    <section className="mt-4 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+    <section className="mt-2 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
       <div className="bg-primary px-5 py-4">
         <p className="text-[15px] font-semibold text-primary-foreground">{stage.name}</p>
         <p className="text-xs text-primary-foreground/80">Stage configuration · Project Core</p>
@@ -233,7 +233,7 @@ function DetailPanel({
 export function StagesScreen() {
   const [stages, setStages] = useState<Stage[]>(initialStages);
   const [selected, setSelected] = useState<string | null>("feasibility");
-  const active = stages.find((s) => s.id === selected) ?? null;
+  
 
   const patch = (id: string, p: Partial<Stage>) =>
     setStages((prev) => prev.map((s) => (s.id === id ? { ...s, ...p } : s)));
