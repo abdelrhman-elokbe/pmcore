@@ -8,6 +8,7 @@ import {
   Users,
   Briefcase,
   Wrench,
+  Gauge,
 } from "lucide-react";
 
 export type Stage = {
@@ -18,7 +19,7 @@ export type Stage = {
   mandatory: boolean;
   steps: number;
   enabled: boolean;
-  config: "feasibility" | "execution" | "closure" | "generic";
+  config: "proposal" | "feasibility" | "businessCase" | "execution" | "closure" | "benefits" | "generic";
 };
 
 export const initialStages: Stage[] = [
@@ -33,6 +34,16 @@ export const initialStages: Stage[] = [
     config: "generic",
   },
   {
+    id: "proposal",
+    name: "Proposal",
+    nameAr: "المقترح",
+    meta: "Required fields · confidential handling",
+    mandatory: true,
+    steps: 2,
+    enabled: true,
+    config: "proposal",
+  },
+  {
     id: "feasibility",
     name: "Feasibility Study",
     nameAr: "دراسة الجدوى",
@@ -41,6 +52,16 @@ export const initialStages: Stage[] = [
     steps: 4,
     enabled: true,
     config: "feasibility",
+  },
+  {
+    id: "business-case",
+    name: "Business Case",
+    nameAr: "دراسة الحالة",
+    meta: "Internal / external · ROI, NPV, IRR",
+    mandatory: true,
+    steps: 3,
+    enabled: true,
+    config: "businessCase",
   },
   {
     id: "planning",
@@ -80,7 +101,7 @@ export const initialStages: Stage[] = [
     mandatory: false,
     steps: 2,
     enabled: false,
-    config: "generic",
+    config: "benefits",
   },
 ];
 
@@ -205,7 +226,16 @@ export const initialFeatureSections: FeatureSection[] = [
       [6],
     ),
   },
+  pmDashboardSection,
 ];
+
+export const pmDashboardSection: FeatureSection = {
+  id: "pm-dashboard",
+  title: "PM Dashboard",
+  icon: Gauge,
+  tone: "text-navy bg-muted",
+  items: [{ name: "PM Dashboard — Enable or disable the PM Dashboard for this client.", enabled: true }],
+};
 
 export type Role = {
   id: string;
