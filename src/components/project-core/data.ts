@@ -54,16 +54,6 @@ export const initialStages: Stage[] = [
     config: "businessCase",
   },
   {
-    id: "planning",
-    name: "Planning",
-    nameAr: "التخطيط",
-    meta: "Phases, budget baseline, schedule",
-    mandatory: true,
-    steps: 5,
-    enabled: true,
-    config: "generic",
-  },
-  {
     id: "execution",
     name: "Execution",
     nameAr: "التنفيذ",
