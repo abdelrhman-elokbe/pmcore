@@ -24,16 +24,6 @@ export type Stage = {
 
 export const initialStages: Stage[] = [
   {
-    id: "initiation",
-    name: "Initiation",
-    nameAr: "التدشين",
-    meta: "Project profile · Sponsor & PM assignment",
-    mandatory: true,
-    steps: 3,
-    enabled: true,
-    config: "generic",
-  },
-  {
     id: "proposal",
     name: "Proposal",
     nameAr: "المقترح",
