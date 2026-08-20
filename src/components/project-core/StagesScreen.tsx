@@ -25,7 +25,6 @@ type Tab = (typeof tabs)[number];
 
 function CriteriaList({ items, id }: { items: string[]; id: string }) {
   const [checked, setChecked] = useState<boolean[]>(() => items.map((_, i) => i < 3));
-  const [custom, setCustom] = useState("");
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
@@ -43,13 +42,6 @@ function CriteriaList({ items, id }: { items: string[]; id: string }) {
           </CheckRow>
         ))}
       </div>
-      <Field label="Custom rule">
-        <TextField
-          value={custom}
-          onChange={(e) => setCustom(e.target.value)}
-          placeholder="Describe an additional rule for this client"
-        />
-      </Field>
     </div>
   );
 }
