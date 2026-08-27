@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GripVertical, Plus, Check, RotateCcw, X, ChevronDown } from "lucide-react";
+import { GripVertical, Plus, Check, RotateCcw, X, ChevronDown, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   approvalChain,
@@ -7,7 +7,8 @@ import {
   confidentialChain,
   entryCriteria,
   exitCriteria,
-  initialStages,
+  initialPhases,
+  type Phase,
   type Stage,
 } from "./data";
 import { CheckRow, Field, SelectField, TextField, Toggle } from "./primitives";
