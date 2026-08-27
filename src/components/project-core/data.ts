@@ -22,68 +22,101 @@ export type Stage = {
   config: "proposal" | "feasibility" | "businessCase" | "execution" | "closure" | "benefits" | "generic";
 };
 
-export const initialStages: Stage[] = [
+export type Phase = {
+  id: string;
+  name: string;
+  nameAr: string;
+  meta: string;
+  stages: Stage[];
+};
+
+export const initialPhases: Phase[] = [
   {
-    id: "proposal",
-    name: "Proposal",
-    nameAr: "المقترح",
-    meta: "Required fields · confidential handling",
-    mandatory: true,
-    steps: 2,
-    enabled: true,
-    config: "proposal",
+    id: "initiation",
+    name: "Project Initiation",
+    nameAr: "بدء المشروع",
+    meta: "Proposal · Feasibility Study · Business Case",
+    stages: [
+      {
+        id: "proposal",
+        name: "Proposal",
+        nameAr: "المقترح",
+        meta: "Required fields · confidential handling",
+        mandatory: true,
+        steps: 2,
+        enabled: true,
+        config: "proposal",
+      },
+      {
+        id: "feasibility",
+        name: "Feasibility Study",
+        nameAr: "دراسة الجدوى",
+        meta: "Simplified / detailed assessments",
+        mandatory: false,
+        steps: 4,
+        enabled: true,
+        config: "feasibility",
+      },
+      {
+        id: "business-case",
+        name: "Business Case",
+        nameAr: "دراسة الحالة",
+        meta: "Internal / external · ROI, NPV, IRR",
+        mandatory: true,
+        steps: 3,
+        enabled: true,
+        config: "businessCase",
+      },
+    ],
   },
   {
-    id: "feasibility",
-    name: "Feasibility Study",
-    nameAr: "دراسة الجدوى",
-    meta: "Simplified / detailed assessments",
-    mandatory: false,
-    steps: 4,
-    enabled: true,
-    config: "feasibility",
+    id: "execution-phase",
+    name: "Project Execution",
+    nameAr: "تنفيذ المشروع",
+    meta: "Schedule · change requests · health score",
+    stages: [
+      {
+        id: "execution",
+        name: "Execution",
+        nameAr: "التنفيذ",
+        meta: "Phases · Milestones · Deliverables · Tasks",
+        mandatory: true,
+        steps: 6,
+        enabled: true,
+        config: "execution",
+      },
+    ],
   },
   {
-    id: "business-case",
-    name: "Business Case",
-    nameAr: "دراسة الحالة",
-    meta: "Internal / external · ROI, NPV, IRR",
-    mandatory: true,
-    steps: 3,
-    enabled: true,
-    config: "businessCase",
-  },
-  {
-    id: "execution",
-    name: "Execution",
-    nameAr: "التنفيذ",
-    meta: "Phases · Milestones · Deliverables · Tasks",
-    mandatory: true,
-    steps: 6,
-    enabled: true,
-    config: "execution",
-  },
-  {
-    id: "closure",
-    name: "Closure",
-    nameAr: "الإغلاق",
-    meta: "Prerequisites, lessons learned, sign-off",
-    mandatory: true,
-    steps: 4,
-    enabled: true,
-    config: "closure",
-  },
-  {
-    id: "benefits",
-    name: "Benefits Realization",
-    nameAr: "تحقيق المنافع",
-    meta: "KPI linkage · post-implementation review",
-    mandatory: false,
-    steps: 2,
-    enabled: false,
-    config: "benefits",
+    id: "closure-phase",
+    name: "Project Closure",
+    nameAr: "إغلاق المشروع",
+    meta: "Closure · Benefits Realization",
+    stages: [
+      {
+        id: "closure",
+        name: "Closure",
+        nameAr: "الإغلاق",
+        meta: "Prerequisites, lessons learned, sign-off",
+        mandatory: true,
+        steps: 4,
+        enabled: true,
+        config: "closure",
+      },
+      {
+        id: "benefits",
+        name: "Benefits Realization",
+        nameAr: "تحقيق المنافع",
+        meta: "KPI linkage · post-implementation review",
+        mandatory: false,
+        steps: 2,
+        enabled: false,
+        config: "benefits",
+      },
+    ],
   },
 ];
+
 
 export const entryCriteria = [
   "Previous stage must be fully approved",
