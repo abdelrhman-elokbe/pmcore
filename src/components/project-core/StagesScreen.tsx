@@ -332,37 +332,8 @@ function DetailPanel({
           </div>
         )}
 
-        {tab === "Approval chain" && (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              {approvalChain.map((s, i) => (
-                <ApprovalStep key={s.name} index={i + 1} name={s.name} role={s.role} />
-              ))}
-              <button
-                type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-primary py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary-soft"
-              >
-                <Plus className="size-4" /> Add step
-              </button>
-            </div>
-            <div>
-              <h3 className="mb-2 text-sm font-semibold text-foreground">
-                Confidential projects — separate approval chain
-              </h3>
-              <div className="space-y-2">
-                {confidentialChain.map((s, i) => (
-                  <ApprovalStep key={s.name} index={i + 1} name={s.name} role={s.role} />
-                ))}
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-primary py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary-soft"
-                >
-                  <Plus className="size-4" /> Add step
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {tab === "Approval workflow" && <ApprovalWorkflowTab stageId={stage.id} />}
+
 
         {tab === "Stage config" && <StageConfig stage={stage} />}
       </div>
