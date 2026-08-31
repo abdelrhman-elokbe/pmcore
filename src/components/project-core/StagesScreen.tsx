@@ -1,15 +1,28 @@
 import { useState } from "react";
-import { GripVertical, Plus, Check, RotateCcw, X, ChevronDown, Lock } from "lucide-react";
+import {
+  GripVertical,
+  Check,
+  RotateCcw,
+  X,
+  ChevronDown,
+  Lock,
+  AlertTriangle,
+  ExternalLink,
+} from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import {
-  approvalChain,
+  availableWorkflows,
   businessRules,
-  confidentialChain,
   entryCriteria,
   exitCriteria,
+  getAssignment,
   initialPhases,
+  mockWorkflows,
+  workflowAssignments,
   type Phase,
   type Stage,
+  type WorkflowDef,
 } from "./data";
 import { CheckRow, Field, SelectField, TextField, Toggle } from "./primitives";
 import { StageConfig } from "./StageConfigPanels";
@@ -19,7 +32,7 @@ const tabs = [
   "Entry criteria",
   "Exit criteria",
   "Business rules",
-  "Approval chain",
+  "Approval workflow",
   "Stage config",
 ] as const;
 type Tab = (typeof tabs)[number];
@@ -71,6 +84,140 @@ function ApprovalStep({ index, name, role }: { index: number; name: string; role
     </div>
   );
 }
+
+function WorkflowPreview({ workflow }: { workflow: WorkflowDef }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs text-muted-foreground">
+          Steps are inherited from the Workflows module and cannot be edited here.
+        </p>
+        <Link
+          to="/workflows"
+          className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-soft"
+        >
+          <ExternalLink className="size-3.5" /> Manage in Workflows
+        </Link>
+      </div>
+      {workflow.steps.map((s) => (
+        <ApprovalStep
+          key={s.order}
+          index={s.order}
+          name={s.name}
+          role={`Assignee: ${s.assigneeRole}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function WorkflowSelect({
+  label,
+  value,
+  onChange,
+  confidential,
+}: {
+  label: string;
+  value: string | null;
+  onChange: (v: string | null) => void;
+  confidential: boolean;
+}) {
+  const options = availableWorkflows(confidential);
+  const selectedRaw = value ? mockWorkflows.find((w) => w.id === value) : undefined;
+  const unavailable =
+    !!value && (!selectedRaw || selectedRaw.status === "Disabled" || selectedRaw.consumer !== "Project Core");
+  const selected = unavailable ? undefined : selectedRaw;
+
+  return (
+    <div className="space-y-3">
+      <Field label={label}>
+        <select
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value || null)}
+          className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary"
+        >
+          <option value="">— None —</option>
+          {options.map((w) => (
+            <option key={w.id} value={w.id}>
+              {`${w.title} · ${w.key} · ${w.version} · ${w.steps.length} states`}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      {unavailable ? (
+        <p className="flex items-start gap-2 rounded-xl border border-warning/40 bg-warning-soft px-4 py-3 text-sm text-warning">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+          The assigned workflow is no longer available. Select a replacement.
+        </p>
+      ) : null}
+
+      {selected ? (
+        <>
+          <p className="text-sm font-semibold text-foreground">
+            {selected.title}{" "}
+            <span className="text-xs font-medium text-muted-foreground">
+              {selected.key} · {selected.version}
+            </span>
+          </p>
+          <WorkflowPreview workflow={selected} />
+        </>
+      ) : !unavailable ? (
+        <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
+          No workflow assigned. Select a workflow to define the approval path for this stage.
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function ApprovalWorkflowTab({ stageId }: { stageId: string }) {
+  const [assignment, setAssignment] = useState(() => getAssignment(stageId));
+  const update = (patch: Partial<typeof assignment>) =>
+    setAssignment((prev) => {
+      const next = { ...prev, ...patch };
+      workflowAssignments[stageId] = next;
+      return next;
+    });
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-foreground">
+          Workflow assignment (standard projects)
+        </h3>
+        <WorkflowSelect
+          label="Assigned workflow"
+          value={assignment.standard}
+          onChange={(v) => update({ standard: v })}
+          confidential={false}
+        />
+      </div>
+
+      <div className="space-y-3 border-t border-border pt-5">
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-border px-4 py-3">
+          <span className="text-sm text-foreground">
+            Use a different workflow for confidential projects
+          </span>
+          <Toggle
+            checked={assignment.useConfidential}
+            onChange={(v) => update({ useConfidential: v })}
+            label="Use a different workflow for confidential projects"
+          />
+        </div>
+        {assignment.useConfidential ? (
+          <WorkflowSelect
+            label="Assigned workflow (confidential projects)"
+            value={assignment.confidential}
+            onChange={(v) => update({ confidential: v })}
+            confidential
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 
 function DetailPanel({
   stage,
