@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Building2, Layers, Save, Settings2, ShieldCheck, ToggleRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StagesScreen } from "@/components/project-core/StagesScreen";
+import { getAssignment, initialPhases } from "@/components/project-core/data";
 import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
@@ -86,7 +87,18 @@ function ProjectCoreAdmin() {
           </button>
           <button
             type="button"
-            onClick={() => toast.success(`${current.title} configuration saved`)}
+            onClick={() => {
+              if (screen === "stages") {
+                const missing = initialPhases
+                  .flatMap((ph) => ph.stages)
+                  .filter((st) => st.mandatory && !getAssignment(st.id).standard);
+                if (missing.length > 0) {
+                  toast.error("Assign an approval workflow before saving.");
+                  return;
+                }
+              }
+              toast.success(`${current.title} configuration saved`);
+            }}
             className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Save className="size-4" /> Save

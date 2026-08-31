@@ -142,17 +142,111 @@ export const businessRules = [
   { label: "Can this stage be skipped", options: ["No", "Yes, with PMO approval", "Yes"] },
 ];
 
-export const approvalChain = [
-  { name: "PM submission", role: "Assignee: Project Manager" },
-  { name: "PMO review", role: "Assignee: PMO Officer" },
-  { name: "Sponsor endorsement", role: "Assignee: Project Sponsor" },
-  { name: "Portfolio committee", role: "Assignee: Committee Chair" },
+export type WorkflowStep = {
+  order: number;
+  name: string;
+  assigneeRole: string;
+  actions: ("approve" | "return" | "reject")[];
+};
+
+export type WorkflowDef = {
+  id: string;
+  title: string;
+  key: string;
+  version: string;
+  consumer: string;
+  status: "Enabled" | "Disabled";
+  isConfidential: boolean;
+  steps: WorkflowStep[];
+};
+
+const allActions: WorkflowStep["actions"] = ["approve", "return", "reject"];
+
+export const mockWorkflows: WorkflowDef[] = [
+  {
+    id: "wf-standard-stage",
+    title: "Standard stage approval",
+    key: "PC-STG-APR",
+    version: "v3",
+    consumer: "Project Core",
+    status: "Enabled",
+    isConfidential: false,
+    steps: [
+      { order: 1, name: "PM submission", assigneeRole: "Project Manager", actions: allActions },
+      { order: 2, name: "PMO review", assigneeRole: "PMO Officer", actions: allActions },
+      { order: 3, name: "Sponsor endorsement", assigneeRole: "Project Sponsor", actions: allActions },
+      { order: 4, name: "Portfolio committee", assigneeRole: "Committee Chair", actions: allActions },
+    ],
+  },
+  {
+    id: "wf-fast-track",
+    title: "Fast-track approval",
+    key: "PC-FAST-APR",
+    version: "v2",
+    consumer: "Project Core",
+    status: "Enabled",
+    isConfidential: false,
+    steps: [
+      { order: 1, name: "PM submission", assigneeRole: "Project Manager", actions: allActions },
+      { order: 2, name: "PMO sign-off", assigneeRole: "PMO Director", actions: allActions },
+    ],
+  },
+  {
+    id: "wf-confidential",
+    title: "Confidential project approval",
+    key: "PC-CONF-APR",
+    version: "v1",
+    consumer: "Project Core",
+    status: "Enabled",
+    isConfidential: true,
+    steps: [
+      { order: 1, name: "Confidential PMO review", assigneeRole: "Confidential PMO", actions: allActions },
+      { order: 2, name: "Executive approval", assigneeRole: "Executive Director", actions: allActions },
+    ],
+  },
+  {
+    id: "wf-legacy",
+    title: "Legacy stage approval",
+    key: "PC-LEG-APR",
+    version: "v1",
+    consumer: "Project Core",
+    status: "Disabled",
+    isConfidential: false,
+    steps: [
+      { order: 1, name: "PMO review", assigneeRole: "PMO Officer", actions: allActions },
+    ],
+  },
+  {
+    id: "wf-invoice",
+    title: "Invoice approval",
+    key: "FIN-INV-APR",
+    version: "v4",
+    consumer: "Finance",
+    status: "Enabled",
+    isConfidential: false,
+    steps: [{ order: 1, name: "Finance review", assigneeRole: "Finance Officer", actions: allActions }],
+  },
 ];
 
-export const confidentialChain = [
-  { name: "Confidential PMO review", role: "Assignee: Confidential PMO" },
-  { name: "Executive approval", role: "Assignee: Executive Director" },
-];
+export const availableWorkflows = (confidential = false) =>
+  mockWorkflows.filter(
+    (w) =>
+      w.consumer === "Project Core" &&
+      w.status === "Enabled" &&
+      (confidential ? true : !w.isConfidential),
+  );
+
+export type StageWorkflowAssignment = {
+  standard: string | null;
+  confidential: string | null;
+  useConfidential: boolean;
+};
+
+export const workflowAssignments: Record<string, StageWorkflowAssignment> = {};
+
+export const getAssignment = (stageId: string): StageWorkflowAssignment =>
+  workflowAssignments[stageId] ?? { standard: null, confidential: null, useConfidential: true };
+
 
 export type FeatureSection = {
   id: string;
