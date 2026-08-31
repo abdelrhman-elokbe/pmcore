@@ -176,7 +176,7 @@ function ApprovalWorkflowTab({
   onChanged,
 }: {
   stageId: string;
-  onChanged?: () => void;
+  onChanged?: (() => void) | undefined;
 }) {
   const [assignment, setAssignment] = useState(() => getAssignment(stageId));
   const update = (patch: Partial<typeof assignment>) =>
@@ -233,7 +233,7 @@ function DetailPanel({
 }: {
   stage: Stage;
   onChange: (patch: Partial<Stage>) => void;
-  onAssignmentChange?: () => void;
+  onAssignmentChange?: (() => void) | undefined;
 }) {
   const [tab, setTab] = useState<Tab>("General");
   const [scope, setScope] = useState("new");
