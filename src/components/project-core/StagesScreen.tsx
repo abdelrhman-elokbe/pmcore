@@ -171,12 +171,19 @@ function WorkflowSelect({
   );
 }
 
-function ApprovalWorkflowTab({ stageId }: { stageId: string }) {
+function ApprovalWorkflowTab({
+  stageId,
+  onChanged,
+}: {
+  stageId: string;
+  onChanged?: () => void;
+}) {
   const [assignment, setAssignment] = useState(() => getAssignment(stageId));
   const update = (patch: Partial<typeof assignment>) =>
     setAssignment((prev) => {
       const next = { ...prev, ...patch };
       workflowAssignments[stageId] = next;
+      onChanged?.();
       return next;
     });
 
@@ -222,9 +229,11 @@ function ApprovalWorkflowTab({ stageId }: { stageId: string }) {
 function DetailPanel({
   stage,
   onChange,
+  onAssignmentChange,
 }: {
   stage: Stage;
   onChange: (patch: Partial<Stage>) => void;
+  onAssignmentChange?: () => void;
 }) {
   const [tab, setTab] = useState<Tab>("General");
   const [scope, setScope] = useState("new");
@@ -332,7 +341,9 @@ function DetailPanel({
           </div>
         )}
 
-        {tab === "Approval workflow" && <ApprovalWorkflowTab stageId={stage.id} />}
+        {tab === "Approval workflow" && (
+          <ApprovalWorkflowTab stageId={stage.id} onChanged={onAssignmentChange} />
+        )}
 
 
         {tab === "Stage config" && <StageConfig stage={stage} />}
@@ -344,6 +355,7 @@ function DetailPanel({
 export function StagesScreen() {
   const [phases, setPhases] = useState<Phase[]>(initialPhases);
   const [selected, setSelected] = useState<string | null>("feasibility");
+  const [, setTick] = useState(0);
 
   const patch = (id: string, p: Partial<Stage>) =>
     setPhases((prev) =>
@@ -373,6 +385,7 @@ export function StagesScreen() {
           <div className="mt-2 space-y-2">
             {phase.stages.map((stage, i) => {
               const isActive = stage.id === selected;
+              const needsWorkflow = stage.mandatory && !getAssignment(stage.id).standard;
               return (
                 <div key={stage.id}>
                   <div
@@ -410,6 +423,14 @@ export function StagesScreen() {
                       <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
                         {stage.steps} steps
                       </span>
+                      {needsWorkflow ? (
+                        <span
+                          title="Assign an approval workflow before saving."
+                          className="flex items-center gap-1 rounded-full bg-warning-soft px-2.5 py-1 text-xs font-semibold text-warning"
+                        >
+                          <AlertTriangle className="size-3" /> No workflow
+                        </span>
+                      ) : null}
                       <ChevronDown
                         className={cn(
                           "size-4 text-muted-foreground transition-transform",
@@ -431,6 +452,7 @@ export function StagesScreen() {
                       key={stage.id}
                       stage={stage}
                       onChange={(p) => patch(stage.id, p)}
+                      onAssignmentChange={() => setTick((t) => t + 1)}
                     />
                   ) : null}
                 </div>
