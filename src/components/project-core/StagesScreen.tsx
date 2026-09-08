@@ -5,7 +5,6 @@ import {
   RotateCcw,
   X,
   ChevronDown,
-  Lock,
   AlertTriangle,
   ExternalLink,
 } from "lucide-react";
