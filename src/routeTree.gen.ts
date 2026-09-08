@@ -15,6 +15,7 @@ import { Route as IdentityRouteImport } from './routes/identity'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TenantRouteImport } from './routes/tenant'
 import { Route as TenantsRouteImport } from './routes/tenants'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 
@@ -48,6 +49,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TenantRoute = TenantRouteImport.update({
+  id: '/tenant',
+  path: '/tenant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TenantsRoute = TenantsRouteImport.update({
   id: '/tenants',
   path: '/tenants',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
     | '/tenants'
     | '/workflows'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
     | '/tenants'
     | '/workflows'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
     | '/tenants'
     | '/workflows'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
   SettingsRoute: typeof SettingsRoute
+  TenantRoute: typeof TenantRoute
   TenantsRoute: typeof TenantsRoute
   WorkflowsRoute: typeof WorkflowsRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tenant': {
+      id: '/tenant'
+      path: '/tenant'
+      fullPath: '/tenant'
+      preLoaderRoute: typeof TenantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tenants': {
       id: '/tenants'
       path: '/tenants'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
   SettingsRoute: SettingsRoute,
+  TenantRoute: TenantRoute,
   TenantsRoute: TenantsRoute,
   WorkflowsRoute: WorkflowsRoute,
 }
