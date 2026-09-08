@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IdentityRouteImport } from './routes/identity'
+import { Route as OrganisationRouteImport } from './routes/organisation'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -32,6 +33,11 @@ const AuditRoute = AuditRouteImport.update({
 const IdentityRoute = IdentityRouteImport.update({
   id: '/identity',
   path: '/identity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganisationRoute = OrganisationRouteImport.update({
+  id: '/organisation',
+  path: '/organisation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/identity': typeof IdentityRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/identity'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/identity'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/identity'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuditRoute: typeof AuditRoute
   IdentityRoute: typeof IdentityRoute
+  OrganisationRoute: typeof OrganisationRoute
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
   SettingsRoute: typeof SettingsRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/identity'
       fullPath: '/identity'
       preLoaderRoute: typeof IdentityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organisation': {
+      id: '/organisation'
+      path: '/organisation'
+      fullPath: '/organisation'
+      preLoaderRoute: typeof OrganisationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
   IdentityRoute: IdentityRoute,
+  OrganisationRoute: OrganisationRoute,
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
   SettingsRoute: SettingsRoute,
