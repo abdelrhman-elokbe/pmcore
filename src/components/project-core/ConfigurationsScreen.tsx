@@ -207,13 +207,15 @@ export function ConfigurationsScreen() {
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader icon={KeyRound} title="License" tone="text-warning bg-warning-soft" />
+        <p className="-mt-1 mb-4 text-xs text-muted-foreground">
+          View only. Licensing is managed in Tenants &amp; Licensing.
+        </p>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Max active users">
-            <TextField type="number" defaultValue={250} min={1} />
+            <TextField readOnly type="number" defaultValue={250} min={1} />
           </Field>
           <Field label="License expiry">
-            <TextField type="date" defaultValue="2026-08-21" />
-          </Field>
+            <TextField readOnly type="date" defaultValue="2026-08-21" />
           <Field label="Licensed modules">
             <TextField readOnly defaultValue="Project Core, PMO Dashboard, Reports Center" />
           </Field>
