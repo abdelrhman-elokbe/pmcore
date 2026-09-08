@@ -403,7 +403,6 @@ export function StagesScreen() {
                     </span>
                     <div className="min-w-0">
                       <p className="text-[15px] font-semibold text-foreground">{stage.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{stage.meta}</p>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
                       <span
