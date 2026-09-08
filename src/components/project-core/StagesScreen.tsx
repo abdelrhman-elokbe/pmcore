@@ -239,20 +239,20 @@ function DetailPanel({
   const [scope, setScope] = useState("new");
 
   return (
-    <section className="mt-2 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
-      <div className="bg-primary px-5 py-4">
+    <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+      <div className="shrink-0 bg-primary px-5 py-3">
         <p className="text-[15px] font-semibold text-primary-foreground">{stage.name}</p>
         <p className="text-xs text-primary-foreground/80">Stage configuration · Project Core</p>
       </div>
 
-      <div className="flex flex-wrap gap-1 border-b border-border px-3 pt-3">
+      <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 pt-2">
         {tabs.map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTab(t)}
             className={cn(
-              "rounded-t-xl px-4 py-2.5 text-sm font-medium transition-colors",
+              "shrink-0 rounded-t-xl px-4 py-2 text-sm font-medium transition-colors",
               tab === t
                 ? "border-b-2 border-primary text-primary"
                 : "text-muted-foreground hover:text-foreground",
@@ -263,7 +263,7 @@ function DetailPanel({
         ))}
       </div>
 
-      <div className="p-5">
+      <div className="min-h-0 flex-1 overflow-y-auto p-5">
         {tab === "General" && (
           <div className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
@@ -365,78 +365,48 @@ export function StagesScreen() {
       })),
     );
 
-  return (
-    <div className="space-y-5">
-      {phases.map((phase, pi) => (
-        <section key={phase.id} className="rounded-2xl border border-border bg-card p-3">
-          <div className="flex flex-wrap items-center gap-3 px-1 py-1.5">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-navy text-sm font-semibold text-navy-foreground">
-              {pi + 1}
-            </span>
-            <div className="min-w-0">
-              <p className="text-[15px] font-semibold text-foreground">{phase.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{phase.meta}</p>
-            </div>
-            <span className="ml-auto flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-              <Lock className="size-3" /> Fixed phase
-            </span>
-          </div>
+  const selectedStage = phases
+    .flatMap((phase) => phase.stages)
+    .find((stage) => stage.id === selected);
 
-          <div className="mt-2 space-y-2">
-            {phase.stages.map((stage, i) => {
-              const isActive = stage.id === selected;
-              const needsWorkflow = stage.mandatory && !getAssignment(stage.id).standard;
-              return (
-                <div key={stage.id}>
+  return (
+    <div className="flex h-[calc(100vh-110px)] min-h-[620px] flex-col gap-3 overflow-hidden">
+      <div className="grid shrink-0 grid-cols-1 gap-3 xl:grid-cols-[3fr_1fr_2fr]">
+        {phases.map((phase, pi) => (
+          <section key={phase.id} className="min-w-0 rounded-xl border border-border bg-card p-2.5">
+            <div className="mb-2 flex min-w-0 items-center gap-2 px-1">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-navy text-xs font-semibold text-navy-foreground">
+                {pi + 1}
+              </span>
+              <p className="truncate text-sm font-semibold text-foreground">{phase.name}</p>
+              <Lock className="ml-auto size-3.5 shrink-0 text-muted-foreground" aria-label="Fixed phase" />
+            </div>
+
+            <div className="flex gap-2">
+              {phase.stages.map((stage, i) => {
+                const isActive = stage.id === selected;
+                const needsWorkflow = stage.mandatory && !getAssignment(stage.id).standard;
+                return (
                   <div
+                    key={stage.id}
                     role="button"
                     tabIndex={0}
-                    onClick={() => setSelected(isActive ? null : stage.id)}
-                    onKeyDown={(e) => e.key === "Enter" && setSelected(isActive ? null : stage.id)}
+                    onClick={() => setSelected(stage.id)}
+                    onKeyDown={(e) => e.key === "Enter" && setSelected(stage.id)}
                     className={cn(
-                      "flex cursor-pointer flex-wrap items-center gap-3 rounded-2xl border px-4 py-3.5 transition-colors",
+                      "group min-w-0 flex-1 cursor-pointer rounded-xl border px-3 py-2.5 transition-colors",
                       isActive
                         ? "border-primary bg-primary-soft"
                         : "border-border bg-card hover:bg-muted/50",
                       !stage.enabled && "opacity-60",
                     )}
                   >
-                    <GripVertical className="size-4 cursor-grab text-muted-foreground" />
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                      {pi + 1}.{i + 1}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-[15px] font-semibold text-foreground">{stage.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{stage.meta}</p>
-                    </div>
-                    <div className="ml-auto flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "rounded-full px-2.5 py-1 text-xs font-semibold",
-                          stage.mandatory
-                            ? "bg-secondary-soft text-secondary"
-                            : "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {stage.mandatory ? "Mandatory" : "Optional"}
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="size-3.5 shrink-0 cursor-grab text-muted-foreground" />
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
+                        {pi + 1}.{i + 1}
                       </span>
-                      <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-                        {stage.steps} steps
-                      </span>
-                      {needsWorkflow ? (
-                        <span
-                          title="Assign an approval workflow before saving."
-                          className="flex items-center gap-1 rounded-full bg-warning-soft px-2.5 py-1 text-xs font-semibold text-warning"
-                        >
-                          <AlertTriangle className="size-3" /> No workflow
-                        </span>
-                      ) : null}
-                      <ChevronDown
-                        className={cn(
-                          "size-4 text-muted-foreground transition-transform",
-                          isActive && "rotate-180",
-                        )}
-                      />
+                      <p className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{stage.name}</p>
                       <span onClick={(e) => e.stopPropagation()}>
                         <Toggle
                           checked={stage.enabled}
@@ -445,22 +415,42 @@ export function StagesScreen() {
                         />
                       </span>
                     </div>
+                    <div className="mt-2 flex items-center gap-1.5 pl-5">
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                          stage.mandatory
+                            ? "bg-secondary-soft text-secondary"
+                            : "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {stage.mandatory ? "Mandatory" : "Optional"}
+                      </span>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                        {stage.steps} steps
+                      </span>
+                      {needsWorkflow ? (
+                        <span title="Assign an approval workflow before saving." className="text-warning">
+                          <AlertTriangle className="size-3.5" />
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
 
-                  {isActive ? (
-                    <DetailPanel
-                      key={stage.id}
-                      stage={stage}
-                      onChange={(p) => patch(stage.id, p)}
-                      onAssignmentChange={() => setTick((t) => t + 1)}
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      ))}
+      {selectedStage ? (
+        <DetailPanel
+          key={selectedStage.id}
+          stage={selectedStage}
+          onChange={(p) => patch(selectedStage.id, p)}
+          onAssignmentChange={() => setTick((t) => t + 1)}
+        />
+      ) : null}
     </div>
   );
 }
