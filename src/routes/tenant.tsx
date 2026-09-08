@@ -20,7 +20,7 @@ export const Route = createFileRoute("/tenant")({
       },
     ],
   }),
-  component: TenantOverview;
+  component: TenantOverview,
 });
 
 function Flag({ on, label }: { on: boolean; label: string }) {
