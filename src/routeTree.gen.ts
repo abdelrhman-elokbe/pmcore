@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as BusinessRulesRouteImport } from './routes/business-rules'
 import { Route as IdentityRouteImport } from './routes/identity'
+import { Route as LookupsRouteImport } from './routes/lookups'
 import { Route as OrganisationRouteImport } from './routes/organisation'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
@@ -39,6 +40,11 @@ const BusinessRulesRoute = BusinessRulesRouteImport.update({
 const IdentityRoute = IdentityRouteImport.update({
   id: '/identity',
   path: '/identity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LookupsRoute = LookupsRouteImport.update({
+  id: '/lookups',
+  path: '/lookups',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrganisationRoute = OrganisationRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/business-rules'
     | '/identity'
+    | '/lookups'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/business-rules'
     | '/identity'
+    | '/lookups'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/business-rules'
     | '/identity'
+    | '/lookups'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -164,6 +176,7 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   BusinessRulesRoute: typeof BusinessRulesRoute
   IdentityRoute: typeof IdentityRoute
+  LookupsRoute: typeof LookupsRoute
   OrganisationRoute: typeof OrganisationRoute
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/identity'
       fullPath: '/identity'
       preLoaderRoute: typeof IdentityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookups': {
+      id: '/lookups'
+      path: '/lookups'
+      fullPath: '/lookups'
+      preLoaderRoute: typeof LookupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/organisation': {
@@ -260,6 +280,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   BusinessRulesRoute: BusinessRulesRoute,
   IdentityRoute: IdentityRoute,
+  LookupsRoute: LookupsRoute,
   OrganisationRoute: OrganisationRoute,
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
