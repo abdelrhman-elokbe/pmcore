@@ -14,6 +14,7 @@ import { Route as AuditRouteImport } from './routes/audit'
 import { Route as BusinessRulesRouteImport } from './routes/business-rules'
 import { Route as IdentityRouteImport } from './routes/identity'
 import { Route as LookupsRouteImport } from './routes/lookups'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrganisationRouteImport } from './routes/organisation'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
@@ -45,6 +46,11 @@ const IdentityRoute = IdentityRouteImport.update({
 const LookupsRoute = LookupsRouteImport.update({
   id: '/lookups',
   path: '/lookups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrganisationRoute = OrganisationRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/business-rules': typeof BusinessRulesRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/business-rules'
     | '/identity'
     | '/lookups'
+    | '/notifications'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/business-rules'
     | '/identity'
     | '/lookups'
+    | '/notifications'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/business-rules'
     | '/identity'
     | '/lookups'
+    | '/notifications'
     | '/organisation'
     | '/products'
     | '/project-core'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   BusinessRulesRoute: typeof BusinessRulesRoute
   IdentityRoute: typeof IdentityRoute
   LookupsRoute: typeof LookupsRoute
+  NotificationsRoute: typeof NotificationsRoute
   OrganisationRoute: typeof OrganisationRoute
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/lookups'
       fullPath: '/lookups'
       preLoaderRoute: typeof LookupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/organisation': {
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   BusinessRulesRoute: BusinessRulesRoute,
   IdentityRoute: IdentityRoute,
   LookupsRoute: LookupsRoute,
+  NotificationsRoute: NotificationsRoute,
   OrganisationRoute: OrganisationRoute,
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
