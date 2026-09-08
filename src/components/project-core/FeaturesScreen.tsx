@@ -56,21 +56,16 @@ export function FeaturesScreen() {
             {expanded && (
               <div className="grid gap-2 border-t border-border p-4 md:grid-cols-2">
                 {section.items.map((item, i) => (
-                  <div
+                  <button
                     key={item.name}
+                    type="button"
+                    onClick={() => toggleItem(section.id, i, !item.enabled)}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl border border-border px-4 py-3 transition-opacity",
+                      "flex items-center gap-3 rounded-xl border border-border px-4 py-3 text-left transition-opacity",
                       !item.enabled && "bg-muted/40 text-muted-foreground opacity-40",
                     )}
                   >
-                    <input
-                      type="checkbox"
-                      checked={item.enabled}
-                      onChange={(e) => toggleItem(section.id, i, e.target.checked)}
-                      aria-label={`Select ${item.name}`}
-                      className="size-4 accent-[var(--primary)]"
-                    />
-                    <span className={cn("text-sm", item.enabled ? "text-foreground" : "text-muted-foreground")}>
+                    <span className={cn("flex-1 text-sm", item.enabled ? "text-foreground" : "text-muted-foreground")}>
                       {item.name}
                     </span>
                     <span className="ml-auto">
@@ -80,7 +75,7 @@ export function FeaturesScreen() {
                         label={item.name}
                       />
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
