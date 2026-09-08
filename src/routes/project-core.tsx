@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { ArrowLeft, Building2, Layers, Save, Settings2, ShieldCheck, ToggleRight } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  Layers,
+  ListTree,
+  Save,
+  Settings2,
+  ShieldCheck,
+  ToggleRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StagesScreen } from "@/components/project-core/StagesScreen";
 import { getAssignment, initialPhases } from "@/components/project-core/data";

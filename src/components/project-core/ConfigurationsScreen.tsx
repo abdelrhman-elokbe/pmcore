@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Palette, Globe2, Network, Activity, KeyRound, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
