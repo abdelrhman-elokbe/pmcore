@@ -74,6 +74,13 @@ const screens = [
     subtitle: "Define what each role can view, create, edit, approve, delete and export",
   },
   {
+    id: "lookups",
+    label: "Lookups",
+    icon: ListTree,
+    title: "Lookups",
+    subtitle: "Per-client lists: categories, types, sources, benefits, entities and health bands",
+  },
+  {
     id: "configurations",
     label: "Configurations",
     icon: Settings2,
