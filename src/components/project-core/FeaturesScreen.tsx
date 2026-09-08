@@ -7,6 +7,9 @@ import { Toggle } from "./primitives";
 export function FeaturesScreen() {
   const [sections, setSections] = useState<FeatureSection[]>(initialFeatureSections);
   const [open, setOpen] = useState<string[]>(["dashboard"]);
+  const [sectionEnabled, setSectionEnabled] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(initialFeatureSections.map((s) => [s.id, true])),
+  );
 
   const toggleItem = (sid: string, idx: number, v: boolean) =>
     setSections((prev) =>
@@ -20,38 +23,50 @@ export function FeaturesScreen() {
   return (
     <div className="space-y-3">
       {sections.map((section) => {
-        const expanded = open.includes(section.id);
+        const active = sectionEnabled[section.id] !== false;
+        const expanded = active && open.includes(section.id);
         const count = section.items.filter((i) => i.enabled).length;
         const Icon = section.icon;
         return (
           <section
             key={section.id}
-            className="overflow-hidden rounded-2xl border border-border bg-card shadow-card"
+            className={cn(
+              "overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-opacity",
+              !active && "opacity-50",
+            )}
           >
-            <button
-              type="button"
-              aria-expanded={expanded}
-              onClick={() =>
-                setOpen((p) =>
-                  p.includes(section.id) ? p.filter((x) => x !== section.id) : [...p, section.id],
-                )
-              }
-              className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-muted/40"
-            >
-              <span className={cn("flex size-9 items-center justify-center rounded-xl", section.tone)}>
-                <Icon className="size-[18px]" />
-              </span>
-              <span className="text-[15px] font-semibold text-foreground">{section.title}</span>
-              <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-                {count} / {section.items.length} enabled
-              </span>
-              <ChevronDown
-                className={cn(
-                  "ml-auto size-4 text-muted-foreground transition-transform",
-                  expanded && "rotate-180",
-                )}
+            <div className="flex w-full items-center gap-3 px-5 py-4">
+              <button
+                type="button"
+                aria-expanded={expanded}
+                disabled={!active}
+                onClick={() =>
+                  setOpen((p) =>
+                    p.includes(section.id) ? p.filter((x) => x !== section.id) : [...p, section.id],
+                  )
+                }
+                className="flex min-w-0 flex-1 items-center gap-3 text-left disabled:cursor-not-allowed"
+              >
+                <span className={cn("flex size-9 items-center justify-center rounded-xl", section.tone)}>
+                  <Icon className="size-[18px]" />
+                </span>
+                <span className="text-[15px] font-semibold text-foreground">{section.title}</span>
+                <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                  {active ? `${count} / ${section.items.length} enabled` : "Disabled"}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "ml-auto size-4 text-muted-foreground transition-transform",
+                    expanded && "rotate-180",
+                  )}
+                />
+              </button>
+              <Toggle
+                checked={active}
+                onChange={(v) => setSectionEnabled((p) => ({ ...p, [section.id]: v }))}
+                label={`Enable ${section.title}`}
               />
-            </button>
+            </div>
 
             {expanded && (
               <div className="grid gap-2 border-t border-border p-4 md:grid-cols-2">
