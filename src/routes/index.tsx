@@ -1,229 +1,172 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Users, UserCheck, FileClock, Heart } from "lucide-react";
+import { Boxes, Building2, UserCheck, FileClock, ArrowUpRight } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
+import { cn } from "@/lib/utils";
+import { licenceCards, recentChanges, tenants } from "@/lib/platform/data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dashboard | Blackstone IT Platform" },
+      { title: "Platform Dashboard | Blackstone Product 2.0" },
       {
         name: "description",
         content:
-          "Monitor active products, license expiry, platform service health and recent configuration changes across the Blackstone IT platform.",
+          "Host admin view of active products, tenants, users, licence expiry alerts, system health and recent configuration changes.",
       },
-      { property: "og:title", content: "Dashboard | Blackstone IT Platform" },
+      { property: "og:title", content: "Platform Dashboard | Blackstone Product 2.0" },
       {
         property: "og:description",
-        content:
-          "Monitor products, licenses, system health and configuration changes in one operations dashboard.",
+        content: "Products, tenants, licences, system health and configuration change feed.",
       },
     ],
   }),
   component: Dashboard,
 });
 
+const totalUsers = tenants.reduce((n, t) => n + t.users.active, 0);
+const expiryAlerts = licenceCards.filter((l) => l.daysLeft > 0 && l.daysLeft < 30).length;
+
 const stats = [
-  { label: "Active Products", value: "13", icon: Users },
-  { label: "Active Users", value: "158", icon: UserCheck },
-  { label: "License Expiry Alerts", value: "0", icon: FileClock },
-];
-
-const products = [
-  { name: "Project Core", days: 3, total: 180, tone: "warning" as const },
-  { name: "Innovation Core", days: 136, total: 180, tone: "success" as const },
-  { name: "Task Core", days: 136, total: 180, tone: "success" as const },
-  { name: "Committee core", days: 136, total: 180, tone: "success" as const },
-];
-
-const services = [
-  ["Auth Server", true],
-  ["Administration Service", true],
-  ["Identity Service", true],
-  ["SaaS Service", true],
-  ["Audit Logging Service", true],
-  ["GDPR Service", false],
-  ["File Management Service", true],
-  ["Language Service", true],
-  ["Workflow Service", true],
-  ["Central Shared Service", true],
-  ["Notification Service", true],
-] as const;
-
-const changes = [
+  { label: "Active Products", value: "4", icon: Boxes, tone: "text-primary bg-primary-soft" },
+  { label: "Active Tenants", value: String(tenants.length), icon: Building2, tone: "text-teal bg-teal-soft" },
+  { label: "Active Users", value: String(totalUsers), icon: UserCheck, tone: "text-secondary bg-secondary-soft" },
   {
-    time: "18/08/2026 11:21 · 10 mins ago",
-    title: "Auto Translate",
-    body: "admin auto-translated 'innovation_wf:Title' into 2 language(s): fr, ar",
-    dot: false,
-  },
-  {
-    time: "18/08/2026 11:14 · 17 mins ago",
-    title: "Update",
-    body: "admin updated localization key Menu:AuditMonitoring",
-    dot: true,
-  },
-  {
-    time: "18/08/2026 11:14 · 17 mins ago",
-    title: "Auto Translate",
-    body: "admin auto-translated 'LookupDictionary:Menu:AuditMonitoring:Description' into 2 language(s): fr, ar",
-    dot: false,
-  },
-  {
-    time: "18/08/2026 11:13 · 17 mins ago",
-    title: "Update",
-    body: "Workflow Template Updated",
-    dot: true,
-  },
-  {
-    time: "18/08/2026 11:13 · 18 mins ago",
-    title: "Auto Translate",
-    body: "admin auto-translated 'sylvia_workflow_test:Title' into 2 language(s): fr, ar",
-    dot: false,
+    label: "Licence Expiry Alerts",
+    value: String(expiryAlerts),
+    icon: FileClock,
+    tone: "text-warning bg-warning-soft",
   },
 ];
 
 function Gauge({ value }: { value: number }) {
-  const r = 70;
+  const r = 62;
   const c = Math.PI * r;
   return (
-    <div className="relative mx-auto w-[200px] pt-2">
-      <svg viewBox="0 0 180 100" className="w-full">
+    <div className="flex flex-col items-center">
+      <svg viewBox="0 0 160 90" className="w-[220px]">
         <path
-          d="M 20 95 A 70 70 0 0 1 160 95"
+          d={`M 18 80 A ${r} ${r} 0 0 1 142 80`}
           fill="none"
-          stroke="var(--warning-soft)"
-          strokeWidth="16"
+          stroke="var(--muted)"
+          strokeWidth="14"
           strokeLinecap="round"
         />
         <path
-          d="M 20 95 A 70 70 0 0 1 160 95"
+          d={`M 18 80 A ${r} ${r} 0 0 1 142 80`}
           fill="none"
-          stroke="var(--warning)"
-          strokeWidth="16"
+          stroke="var(--success)"
+          strokeWidth="14"
           strokeLinecap="round"
-          strokeDasharray={`${(c * value) / 100} ${c}`}
+          strokeDasharray={`${(value / 100) * c} ${c}`}
         />
       </svg>
-      <div className="absolute inset-x-0 bottom-1 text-center">
-        <p className="text-2xl font-bold text-foreground">{value}%</p>
-        <p className="text-sm font-medium text-warning">Degraded</p>
-      </div>
+      <p className="-mt-6 text-3xl font-bold text-foreground">{value}%</p>
+      <p className="mt-1 rounded-full bg-success-soft px-2.5 py-1 text-xs font-semibold text-success">
+        Healthy
+      </p>
     </div>
   );
 }
 
+function toneFor(days: number) {
+  if (days < 7) return { bar: "bg-destructive", pill: "bg-destructive/10 text-destructive" };
+  if (days < 30) return { bar: "bg-warning", pill: "bg-warning-soft text-warning" };
+  return { bar: "bg-success", pill: "bg-success-soft text-success" };
+}
+
 function Dashboard() {
   return (
-    <AppShell title="Dashboard">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {stats.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="rounded-2xl bg-surface p-5 shadow-card">
-                <div className="flex items-start justify-between">
-                  <p className="text-[15px] font-medium text-foreground">{label}</p>
-                  <Icon className="size-[18px] text-muted-foreground" />
-                </div>
-                <p className="mt-6 text-3xl font-bold text-foreground">{value}</p>
+    <AppShell
+      title="Platform Dashboard"
+      subtitle="Products, tenants, licences and configuration activity across the platform"
+    >
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-2">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {stats.map(({ label, value, icon: Icon, tone }) => (
+              <div key={label} className="rounded-2xl border border-border bg-card p-4 shadow-card">
+                <span className={cn("flex size-9 items-center justify-center rounded-xl", tone)}>
+                  <Icon className="size-[18px]" />
+                </span>
+                <p className="mt-3 text-2xl font-bold text-foreground">{value}</p>
+                <p className="text-xs text-muted-foreground">{label}</p>
               </div>
             ))}
           </div>
 
-          <section className="rounded-2xl bg-card p-5 shadow-card">
-            <h2 className="mb-4 text-[17px] font-semibold text-foreground">
-              Products & License Status
-            </h2>
-            <div className="grid gap-4 md:grid-cols-3">
-              {products.map((p) => (
-                <div key={p.name} className="rounded-2xl border border-border p-5">
-                  <div className="flex items-center justify-between">
-                    {p.name === "Project Core" ? (
-                      <Link
-                        to="/project-core"
-                        className="font-semibold text-primary underline-offset-4 hover:underline"
-                      >
-                        {p.name}
-                      </Link>
-                    ) : (
-                      <h3 className="font-semibold text-foreground">{p.name}</h3>
-                    )}
-                    <span className="rounded-md bg-success-soft px-2 py-1 text-xs font-semibold text-success">
-                      Active
-                    </span>
-                  </div>
-                  <div className="mt-6 flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">License</span>
-                    <span
-                      className={
-                        p.tone === "warning"
-                          ? "font-semibold text-warning"
-                          : "font-semibold text-success"
-                      }
-                    >
-                      {p.days} days left
-                    </span>
-                  </div>
-                  <div className="mt-3 h-1.5 w-full rounded-full bg-muted">
-                    <div
-                      className={`h-full rounded-full ${p.tone === "warning" ? "bg-warning" : "bg-success"}`}
-                      style={{ width: `${Math.max((p.days / p.total) * 100, 8)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="text-[15px] font-semibold text-foreground">Product licences</h2>
+              <Link
+                to="/tenants"
+                className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-primary"
+              >
+                Tenants & licensing <ArrowUpRight className="size-4" />
+              </Link>
             </div>
-          </section>
-
-          <section className="rounded-2xl bg-card p-5 shadow-card">
-            <h2 className="mb-4 text-[17px] font-semibold text-foreground">
-              Platform Services Health
-            </h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {services.map(([name, healthy]) => (
-                <div
-                  key={name}
-                  className="flex items-center justify-between rounded-xl border border-border px-4 py-3.5"
-                >
-                  <span className="text-[15px] text-foreground">{name}</span>
-                  <span
-                    className={`flex items-center gap-2 text-sm font-medium ${healthy ? "text-success" : "text-destructive"}`}
-                  >
-                    <span
-                      className={`size-1.5 rounded-full ${healthy ? "bg-success" : "bg-destructive"}`}
-                    />
-                    {healthy ? "Healthy" : "Unhealthy"}
-                  </span>
-                </div>
-              ))}
+              {licenceCards.map((l) => {
+                const tone = toneFor(l.daysLeft);
+                return (
+                  <div key={`${l.product}-${l.tenant}`} className="rounded-2xl border border-border p-4">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-foreground">{l.product}</p>
+                      <span
+                        className={cn(
+                          "ml-auto rounded-md px-2 py-0.5 text-[11px] font-semibold",
+                          l.status === "Active"
+                            ? "bg-success-soft text-success"
+                            : l.status === "Trial"
+                              ? "bg-primary-soft text-primary"
+                              : "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {l.status}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{l.tenant}</p>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className={cn("h-full rounded-full", tone.bar)}
+                        style={{ width: `${Math.max(3, (l.daysLeft / l.total) * 100)}%` }}
+                      />
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {l.daysLeft > 0 ? `${l.daysLeft} days left` : "Expired"}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         </div>
 
         <div className="space-y-4">
-          <section className="rounded-2xl bg-card p-5 shadow-card">
-            <div className="flex items-start justify-between">
-              <h2 className="text-[17px] font-semibold text-foreground">System Health</h2>
-              <Heart className="size-[18px] text-muted-foreground" />
-            </div>
-            <Gauge value={91} />
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <h2 className="mb-3 text-[15px] font-semibold text-foreground">System health</h2>
+            <Gauge value={96} />
           </section>
 
-          <section className="rounded-2xl bg-card p-5 shadow-card">
-            <h2 className="mb-5 text-[17px] font-semibold text-foreground">
-              Recent Configuration Changes
+          <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <h2 className="mb-3 text-[15px] font-semibold text-foreground">
+              Recent configuration changes
             </h2>
-            <ol className="relative space-y-6 border-l border-border pl-6">
-              {changes.map((c, i) => (
-                <li key={i} className="relative">
-                  <span
-                    className={`absolute -left-[27px] top-1.5 size-2.5 rounded-full ${c.dot ? "bg-primary" : "bg-border"}`}
-                  />
-                  <p className="text-xs text-muted-foreground">{c.time}</p>
-                  <p className="mt-1 font-semibold text-foreground">{c.title}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{c.body}</p>
+            <ul className="space-y-3">
+              {recentChanges.map((c) => (
+                <li key={c.action} className="border-b border-border pb-3 last:border-0 last:pb-0">
+                  <p className="text-sm text-foreground">{c.action}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {c.actor} · {c.tenant} · {c.section}
+                  </p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="text-[11px] text-muted-foreground">{c.time}</span>
+                    <Link to="/change-log" className="text-[11px] font-semibold text-primary">
+                      View diff
+                    </Link>
+                  </div>
                 </li>
               ))}
-            </ol>
+            </ul>
           </section>
         </div>
       </div>

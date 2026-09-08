@@ -11,10 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
+import { Route as BusinessRulesRouteImport } from './routes/business-rules'
+import { Route as ChangeLogRouteImport } from './routes/change-log'
 import { Route as IdentityRouteImport } from './routes/identity'
+import { Route as LookupsRouteImport } from './routes/lookups'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as OrganisationRouteImport } from './routes/organisation'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TenantRouteImport } from './routes/tenant'
+import { Route as TenantsRouteImport } from './routes/tenants'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 
 const IndexRoute = IndexRouteImport.update({
@@ -27,9 +34,34 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BusinessRulesRoute = BusinessRulesRouteImport.update({
+  id: '/business-rules',
+  path: '/business-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangeLogRoute = ChangeLogRouteImport.update({
+  id: '/change-log',
+  path: '/change-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IdentityRoute = IdentityRouteImport.update({
   id: '/identity',
   path: '/identity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LookupsRoute = LookupsRouteImport.update({
+  id: '/lookups',
+  path: '/lookups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganisationRoute = OrganisationRouteImport.update({
+  id: '/organisation',
+  path: '/organisation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -47,6 +79,16 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TenantRoute = TenantRouteImport.update({
+  id: '/tenant',
+  path: '/tenant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TenantsRoute = TenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkflowsRoute = WorkflowsRouteImport.update({
   id: '/workflows',
   path: '/workflows',
@@ -56,29 +98,50 @@ const WorkflowsRoute = WorkflowsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
+  '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
+  '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
+  '/lookups': typeof LookupsRoute
+  '/notifications': typeof NotificationsRoute
+  '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
   '/settings': typeof SettingsRoute
+  '/tenant': typeof TenantRoute
+  '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
 }
 export interface FileRouteTypes {
@@ -86,38 +149,66 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/audit'
+    | '/business-rules'
+    | '/change-log'
     | '/identity'
+    | '/lookups'
+    | '/notifications'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
+    | '/tenants'
     | '/workflows'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/audit'
+    | '/business-rules'
+    | '/change-log'
     | '/identity'
+    | '/lookups'
+    | '/notifications'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
+    | '/tenants'
     | '/workflows'
   id:
     | '__root__'
     | '/'
     | '/audit'
+    | '/business-rules'
+    | '/change-log'
     | '/identity'
+    | '/lookups'
+    | '/notifications'
+    | '/organisation'
     | '/products'
     | '/project-core'
     | '/settings'
+    | '/tenant'
+    | '/tenants'
     | '/workflows'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuditRoute: typeof AuditRoute
+  BusinessRulesRoute: typeof BusinessRulesRoute
+  ChangeLogRoute: typeof ChangeLogRoute
   IdentityRoute: typeof IdentityRoute
+  LookupsRoute: typeof LookupsRoute
+  NotificationsRoute: typeof NotificationsRoute
+  OrganisationRoute: typeof OrganisationRoute
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
   SettingsRoute: typeof SettingsRoute
+  TenantRoute: typeof TenantRoute
+  TenantsRoute: typeof TenantsRoute
   WorkflowsRoute: typeof WorkflowsRoute
 }
 
@@ -137,11 +228,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/business-rules': {
+      id: '/business-rules'
+      path: '/business-rules'
+      fullPath: '/business-rules'
+      preLoaderRoute: typeof BusinessRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-log': {
+      id: '/change-log'
+      path: '/change-log'
+      fullPath: '/change-log'
+      preLoaderRoute: typeof ChangeLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/identity': {
       id: '/identity'
       path: '/identity'
       fullPath: '/identity'
       preLoaderRoute: typeof IdentityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookups': {
+      id: '/lookups'
+      path: '/lookups'
+      fullPath: '/lookups'
+      preLoaderRoute: typeof LookupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organisation': {
+      id: '/organisation'
+      path: '/organisation'
+      fullPath: '/organisation'
+      preLoaderRoute: typeof OrganisationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -165,6 +291,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tenant': {
+      id: '/tenant'
+      path: '/tenant'
+      fullPath: '/tenant'
+      preLoaderRoute: typeof TenantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tenants': {
+      id: '/tenants'
+      path: '/tenants'
+      fullPath: '/tenants'
+      preLoaderRoute: typeof TenantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/workflows': {
       id: '/workflows'
       path: '/workflows'
@@ -178,10 +318,17 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
+  BusinessRulesRoute: BusinessRulesRoute,
+  ChangeLogRoute: ChangeLogRoute,
   IdentityRoute: IdentityRoute,
+  LookupsRoute: LookupsRoute,
+  NotificationsRoute: NotificationsRoute,
+  OrganisationRoute: OrganisationRoute,
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
   SettingsRoute: SettingsRoute,
+  TenantRoute: TenantRoute,
+  TenantsRoute: TenantsRoute,
   WorkflowsRoute: WorkflowsRoute,
 }
 export const routeTree = rootRouteImport
