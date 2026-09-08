@@ -375,11 +375,7 @@ export function StagesScreen() {
             </span>
             <div className="min-w-0">
               <p className="text-[15px] font-semibold text-foreground">{phase.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{phase.meta}</p>
             </div>
-            <span className="ml-auto flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-              <Lock className="size-3" /> Fixed phase
-            </span>
           </div>
 
           <div className="mt-2 space-y-2">
