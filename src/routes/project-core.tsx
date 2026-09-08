@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { ArrowLeft, Building2, Layers, Save, Settings2, ShieldCheck, ToggleRight } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  Layers,
+  ListTree,
+  Save,
+  Settings2,
+  ShieldCheck,
+  ToggleRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StagesScreen } from "@/components/project-core/StagesScreen";
 import { getAssignment, initialPhases } from "@/components/project-core/data";
 import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
+import { LookupsScreen } from "@/components/project-core/LookupsScreen";
+import { usePlatform } from "@/lib/platform/context";
 
-type ScreenId = "stages" | "features" | "roles" | "configurations";
+type ScreenId = "stages" | "features" | "roles" | "lookups" | "configurations";
 
 export const Route = createFileRoute("/project-core")({
   validateSearch: (search: Record<string, unknown>): { screen?: ScreenId } => {
     const s = search["screen"];
-    return s === "features" || s === "roles" || s === "configurations" || s === "stages"
+    return s === "features" ||
+      s === "roles" ||
+      s === "lookups" ||
+      s === "configurations" ||
+      s === "stages"
       ? { screen: s }
       : {};
   },
@@ -59,6 +74,13 @@ const screens = [
     subtitle: "Define what each role can view, create, edit, approve, delete and export",
   },
   {
+    id: "lookups",
+    label: "Lookups",
+    icon: ListTree,
+    title: "Lookups",
+    subtitle: "Per-client lists: categories, types, sources, benefits, entities and health bands",
+  },
+  {
     id: "configurations",
     label: "Configurations",
     icon: Settings2,
@@ -68,6 +90,7 @@ const screens = [
 ] as const;
 
 function ProjectCoreAdmin() {
+  const { tenant, tenants: allTenants, tenantId, setTenantId } = usePlatform();
   const search = Route.useSearch();
   const [screen, setScreen] = useState<ScreenId>(search.screen ?? "stages");
   useEffect(() => {
@@ -124,9 +147,22 @@ function ProjectCoreAdmin() {
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-teal-soft text-teal">
               <Building2 className="size-5" />
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">Riyadh Development Authority</p>
-              <p className="text-xs text-muted-foreground">Project Core 2.0 · 93 users</p>
+            <div className="min-w-0 flex-1">
+              <select
+                value={tenantId}
+                aria-label="Select client"
+                onChange={(e) => setTenantId(e.target.value)}
+                className="w-full truncate rounded-lg border border-transparent bg-transparent text-sm font-semibold text-foreground outline-none hover:border-border"
+              >
+                {allTenants.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground">
+                Project Core 2.0 · {tenant.users.active} users · {tenant.currency}
+              </p>
             </div>
           </div>
 
@@ -170,6 +206,7 @@ function ProjectCoreAdmin() {
           {screen === "stages" && <StagesScreen />}
           {screen === "features" && <FeaturesScreen />}
           {screen === "roles" && <RolesScreen />}
+          {screen === "lookups" && <LookupsScreen />}
           {screen === "configurations" && <ConfigurationsScreen />}
         </main>
       </div>

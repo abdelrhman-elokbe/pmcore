@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Palette, Globe2, Network, Activity, KeyRound, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
@@ -167,41 +168,18 @@ export function ConfigurationsScreen() {
           title="Health score thresholds"
           tone="text-success bg-success-soft"
         />
-        <div className="max-w-[480px] space-y-5 rounded-2xl border border-border p-4">
-          <Threshold
-            color="bg-success"
-            label="Green"
-            value={green}
-            onChange={(v) => setGreen(Math.max(v, yellow + 1))}
-            hint="Projects scoring at or above this value are healthy."
-          />
-          <Threshold
-            color="bg-warning"
-            label="Yellow"
-            value={yellow}
-            onChange={(v) => setYellow(Math.min(v, green - 1))}
-            hint="Projects between this value and the green threshold are at risk."
-          />
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="size-2.5 shrink-0 rounded-full bg-destructive" />
-              <span className="w-20 shrink-0 text-sm font-medium text-foreground">Red</span>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={Math.max(yellow - 1, 0)}
-                disabled
-                readOnly
-                aria-label="Red threshold"
-                className="h-1.5 flex-1 accent-[var(--primary)] opacity-50"
-              />
-              <span className="w-28 text-right text-xs text-muted-foreground">Automatic</span>
-            </div>
-            <p className="mt-1.5 pl-[38px] text-xs text-muted-foreground">
-              Computed automatically as everything below the yellow threshold.
-            </p>
-          </div>
+        <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border p-4">
+          <p className="min-w-0 flex-1 text-sm text-muted-foreground">
+            Health score bands are now maintained in one place, under Lookups → Health Score
+            Configuration.
+          </p>
+          <Link
+            to="/project-core"
+            search={{ screen: "lookups" }}
+            className="flex h-10 items-center rounded-xl border border-border px-4 text-sm font-semibold text-primary transition-colors hover:bg-muted"
+          >
+            Open Health Score Configuration
+          </Link>
         </div>
       </section>
 
