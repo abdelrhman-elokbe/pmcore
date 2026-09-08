@@ -90,6 +90,7 @@ const screens = [
 ] as const;
 
 function ProjectCoreAdmin() {
+  const { tenant, tenants: allTenants, tenantId, setTenantId } = usePlatform();
   const search = Route.useSearch();
   const [screen, setScreen] = useState<ScreenId>(search.screen ?? "stages");
   useEffect(() => {
@@ -146,9 +147,22 @@ function ProjectCoreAdmin() {
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-teal-soft text-teal">
               <Building2 className="size-5" />
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">Riyadh Development Authority</p>
-              <p className="text-xs text-muted-foreground">Project Core 2.0 · 93 users</p>
+            <div className="min-w-0 flex-1">
+              <select
+                value={tenantId}
+                aria-label="Select client"
+                onChange={(e) => setTenantId(e.target.value)}
+                className="w-full truncate rounded-lg border border-transparent bg-transparent text-sm font-semibold text-foreground outline-none hover:border-border"
+              >
+                {allTenants.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground">
+                Project Core 2.0 · {tenant.users.active} users · {tenant.currency}
+              </p>
             </div>
           </div>
 
@@ -192,6 +206,7 @@ function ProjectCoreAdmin() {
           {screen === "stages" && <StagesScreen />}
           {screen === "features" && <FeaturesScreen />}
           {screen === "roles" && <RolesScreen />}
+          {screen === "lookups" && <LookupsScreen />}
           {screen === "configurations" && <ConfigurationsScreen />}
         </main>
       </div>
