@@ -216,6 +216,7 @@ export function ConfigurationsScreen() {
           </Field>
           <Field label="License expiry">
             <TextField readOnly type="date" defaultValue="2026-08-21" />
+          </Field>
           <Field label="Licensed modules">
             <TextField readOnly defaultValue="Project Core, PMO Dashboard, Reports Center" />
           </Field>
