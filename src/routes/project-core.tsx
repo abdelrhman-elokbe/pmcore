@@ -17,13 +17,19 @@ import { getAssignment, initialPhases } from "@/components/project-core/data";
 import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
+import { LookupsScreen } from "@/components/project-core/LookupsScreen";
+import { usePlatform } from "@/lib/platform/context";
 
-type ScreenId = "stages" | "features" | "roles" | "configurations";
+type ScreenId = "stages" | "features" | "roles" | "lookups" | "configurations";
 
 export const Route = createFileRoute("/project-core")({
   validateSearch: (search: Record<string, unknown>): { screen?: ScreenId } => {
     const s = search["screen"];
-    return s === "features" || s === "roles" || s === "configurations" || s === "stages"
+    return s === "features" ||
+      s === "roles" ||
+      s === "lookups" ||
+      s === "configurations" ||
+      s === "stages"
       ? { screen: s }
       : {};
   },
