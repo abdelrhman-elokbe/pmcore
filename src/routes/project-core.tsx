@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Building2, Layers, Save, Settings2, ShieldCheck, ToggleRight } from "lucide-react";
@@ -9,7 +9,15 @@ import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
 
+type ScreenId = "stages" | "features" | "roles" | "configurations";
+
 export const Route = createFileRoute("/project-core")({
+  validateSearch: (search: Record<string, unknown>): { screen?: ScreenId } => {
+    const s = search["screen"];
+    return s === "features" || s === "roles" || s === "configurations" || s === "stages"
+      ? { screen: s }
+      : {};
+  },
   head: () => ({
     meta: [
       { title: "Project Core Admin | Blackstone IT Platform" },
@@ -60,7 +68,11 @@ const screens = [
 ] as const;
 
 function ProjectCoreAdmin() {
-  const [screen, setScreen] = useState<(typeof screens)[number]["id"]>("stages");
+  const search = Route.useSearch();
+  const [screen, setScreen] = useState<ScreenId>(search.screen ?? "stages");
+  useEffect(() => {
+    if (search.screen) setScreen(search.screen);
+  }, [search.screen]);
   const current = screens.find((s) => s.id === screen)!;
 
   return (

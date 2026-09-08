@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as BusinessRulesRouteImport } from './routes/business-rules'
+import { Route as ChangeLogRouteImport } from './routes/change-log'
 import { Route as IdentityRouteImport } from './routes/identity'
 import { Route as LookupsRouteImport } from './routes/lookups'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -36,6 +37,11 @@ const AuditRoute = AuditRouteImport.update({
 const BusinessRulesRoute = BusinessRulesRouteImport.update({
   id: '/business-rules',
   path: '/business-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangeLogRoute = ChangeLogRouteImport.update({
+  id: '/change-log',
+  path: '/change-log',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IdentityRoute = IdentityRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
   '/notifications': typeof NotificationsRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
   '/notifications': typeof NotificationsRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
   '/business-rules': typeof BusinessRulesRoute
+  '/change-log': typeof ChangeLogRoute
   '/identity': typeof IdentityRoute
   '/lookups': typeof LookupsRoute
   '/notifications': typeof NotificationsRoute
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/business-rules'
+    | '/change-log'
     | '/identity'
     | '/lookups'
     | '/notifications'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/business-rules'
+    | '/change-log'
     | '/identity'
     | '/lookups'
     | '/notifications'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/audit'
     | '/business-rules'
+    | '/change-log'
     | '/identity'
     | '/lookups'
     | '/notifications'
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuditRoute: typeof AuditRoute
   BusinessRulesRoute: typeof BusinessRulesRoute
+  ChangeLogRoute: typeof ChangeLogRoute
   IdentityRoute: typeof IdentityRoute
   LookupsRoute: typeof LookupsRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/business-rules'
       fullPath: '/business-rules'
       preLoaderRoute: typeof BusinessRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-log': {
+      id: '/change-log'
+      path: '/change-log'
+      fullPath: '/change-log'
+      preLoaderRoute: typeof ChangeLogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/identity': {
@@ -299,6 +319,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
   BusinessRulesRoute: BusinessRulesRoute,
+  ChangeLogRoute: ChangeLogRoute,
   IdentityRoute: IdentityRoute,
   LookupsRoute: LookupsRoute,
   NotificationsRoute: NotificationsRoute,
