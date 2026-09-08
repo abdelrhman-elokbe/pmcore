@@ -150,7 +150,7 @@ function ProjectCoreAdmin() {
           </nav>
         </aside>
 
-        <main className="min-w-0 flex-1 overflow-hidden px-5 pb-4 pt-5">
+        <main className="min-w-0 flex-1 px-5 pb-12 pt-5">
           <div className="mb-4 flex gap-2 overflow-x-auto lg:hidden">
             {screens.map(({ id, label }) => (
               <button
