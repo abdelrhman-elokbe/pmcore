@@ -33,7 +33,7 @@ function RowMenu({
   onEdit: () => void;
   onDuplicate: () => void;
   onDeactivate: () => void;
-  usedBy?: number;
+  usedBy?: number | undefined;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
