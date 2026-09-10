@@ -180,6 +180,7 @@ export function LookupsScreen() {
       "external-entities": data["external-entities"].length,
       "lessons-learned": data["lessons-learned"].length,
       "health-score": data["health-score"].length,
+      "fs-assessment-types": 3,
       assessments: 0,
     }),
     [data],
