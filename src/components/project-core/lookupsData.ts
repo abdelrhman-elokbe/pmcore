@@ -35,8 +35,7 @@ export type LookupCategoryId =
   | "external-entities"
   | "lessons-learned"
   | "health-score"
-  | "fs-assessment-types"
-  | "assessments";
+  | "fs-assessment-types";
 
 export const lookupCategories: { id: LookupCategoryId; label: string; singular: string }[] = [
   { id: "categories", label: "Project Categories", singular: "Category" },
@@ -47,7 +46,6 @@ export const lookupCategories: { id: LookupCategoryId; label: string; singular: 
   { id: "lessons-learned", label: "Lessons Learned Configuration", singular: "Category" },
   { id: "health-score", label: "Health Score Configuration", singular: "Band" },
   { id: "fs-assessment-types", label: "FS Assessment Types", singular: "Assessment Type" },
-  { id: "assessments", label: "Assessments Configuration", singular: "Assessment" },
 ];
 
 export type TenantLookups = {
