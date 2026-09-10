@@ -305,8 +305,16 @@ export function LookupsScreen() {
                 )}
               </>
             )}
-            <div className={cn(active === "health-score" || active === "assessments" ? "ml-auto" : "")}>
-              {active === "health-score" ? (
+            <div
+              className={cn(
+                active === "health-score" ||
+                  active === "assessments" ||
+                  active === "fs-assessment-types"
+                  ? "ml-auto"
+                  : "",
+              )}
+            >
+              {active === "fs-assessment-types" ? null : active === "health-score" ? (
                 <button
                   type="button"
                   onClick={() => {
