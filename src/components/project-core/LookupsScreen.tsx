@@ -280,7 +280,9 @@ export function LookupsScreen() {
             <h2 className="text-[15px] font-semibold text-foreground">
               {meta.label} ({counts[active]})
             </h2>
-            {active !== "health-score" && active !== "assessments" && (
+            {active !== "health-score" &&
+              active !== "assessments" &&
+              active !== "fs-assessment-types" && (
               <>
                 <div className="relative ml-auto">
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
