@@ -280,9 +280,7 @@ export function LookupsScreen() {
             <h2 className="text-[15px] font-semibold text-foreground">
               {meta.label} ({counts[active]})
             </h2>
-            {active !== "health-score" &&
-              active !== "assessments" &&
-              active !== "fs-assessment-types" && (
+            {active !== "health-score" && active !== "fs-assessment-types" && (
               <>
                 <div className="relative ml-auto">
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -307,11 +305,7 @@ export function LookupsScreen() {
             )}
             <div
               className={cn(
-                active === "health-score" ||
-                  active === "assessments" ||
-                  active === "fs-assessment-types"
-                  ? "ml-auto"
-                  : "",
+                active === "health-score" || active === "fs-assessment-types" ? "ml-auto" : "",
               )}
             >
               {active === "fs-assessment-types" ? null : active === "health-score" ? (
@@ -332,10 +326,6 @@ export function LookupsScreen() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (active === "assessments") {
-                      toast("Assessment templates are coming soon");
-                      return;
-                    }
                     if (active === "external-entities") {
                       setEditingEntity({
                         id: 0,
@@ -630,18 +620,6 @@ export function LookupsScreen() {
             </div>
           )}
 
-          {active === "assessments" && (
-            <div className="flex flex-col items-center gap-4 px-5 py-16 text-center">
-              <p className="text-sm text-muted-foreground">No assessment templates configured</p>
-              <button
-                type="button"
-                onClick={() => toast("Assessment templates are coming soon")}
-                className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-              >
-                <Plus className="size-4" /> Add New Assessment
-              </button>
-            </div>
-          )}
         </section>
       </div>
 
