@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { usePlatform } from "@/lib/platform/context";
 import { Field, SelectField, TextField, Toggle, inputClass } from "./primitives";
+import { AssessmentTypesSection } from "./AssessmentTypesSection";
 import {
   companyTypes,
   entityCategories,
@@ -180,6 +181,7 @@ export function LookupsScreen() {
       "external-entities": data["external-entities"].length,
       "lessons-learned": data["lessons-learned"].length,
       "health-score": data["health-score"].length,
+      "fs-assessment-types": 3,
       assessments: 0,
     }),
     [data],
@@ -279,7 +281,9 @@ export function LookupsScreen() {
             <h2 className="text-[15px] font-semibold text-foreground">
               {meta.label} ({counts[active]})
             </h2>
-            {active !== "health-score" && active !== "assessments" && (
+            {active !== "health-score" &&
+              active !== "assessments" &&
+              active !== "fs-assessment-types" && (
               <>
                 <div className="relative ml-auto">
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -302,8 +306,16 @@ export function LookupsScreen() {
                 )}
               </>
             )}
-            <div className={cn(active === "health-score" || active === "assessments" ? "ml-auto" : "")}>
-              {active === "health-score" ? (
+            <div
+              className={cn(
+                active === "health-score" ||
+                  active === "assessments" ||
+                  active === "fs-assessment-types"
+                  ? "ml-auto"
+                  : "",
+              )}
+            >
+              {active === "fs-assessment-types" ? null : active === "health-score" ? (
                 <button
                   type="button"
                   onClick={() => {
@@ -610,6 +622,12 @@ export function LookupsScreen() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {active === "fs-assessment-types" && (
+            <div className="p-5">
+              <AssessmentTypesSection />
             </div>
           )}
 

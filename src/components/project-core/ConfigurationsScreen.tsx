@@ -1,88 +1,8 @@
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Palette, Globe2, Network, Activity, KeyRound, ListChecks } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Palette, Globe2, Network, Activity, KeyRound } from "lucide-react";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
-import { AssessmentTypesSection } from "./AssessmentTypesSection";
-
-const primaryColors = ["#6d3ff5", "#0f9d8f", "#e4436f", "#f0932b", "#2c3a5a"];
-const secondaryColors = ["#8b5cf6", "#22c1a4", "#f472b6", "#fbbf24"];
-
-function Swatches({
-  colors,
-  value,
-  onChange,
-  label,
-}: {
-  colors: string[];
-  value: string;
-  onChange: (c: string) => void;
-  label: string;
-}) {
-  return (
-    <div className="flex items-center gap-3" role="radiogroup" aria-label={label}>
-      {colors.map((c) => (
-        <button
-          key={c}
-          type="button"
-          role="radio"
-          aria-checked={value === c}
-          aria-label={`${label} ${c}`}
-          onClick={() => onChange(c)}
-          className={cn(
-            "size-9 rounded-full border-2 transition-transform",
-            value === c ? "scale-110 border-foreground" : "border-transparent",
-          )}
-          style={{ backgroundColor: c }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Threshold({
-  color,
-  label,
-  value,
-  onChange,
-  hint,
-  disabled,
-}: {
-  color: string;
-  label: string;
-  value: number;
-  onChange?: (v: number) => void;
-  hint: string;
-  disabled?: boolean;
-}) {
-  return (
-    <div>
-      <div className="flex items-center gap-3">
-        <span className={cn("size-2.5 shrink-0 rounded-full", color)} />
-        <span className="w-20 shrink-0 text-sm font-medium text-foreground">{label}</span>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={value}
-          disabled={disabled}
-          aria-label={`${label} threshold`}
-          onChange={(e) => onChange?.(Number(e.target.value))}
-          className="h-1.5 flex-1 accent-[var(--primary)] disabled:opacity-50"
-        />
-        <span className="w-12 text-right text-sm font-semibold text-foreground">{value}%</span>
-      </div>
-      <p className="mt-1.5 pl-[38px] text-xs text-muted-foreground">{hint}</p>
-    </div>
-  );
-}
 
 export function ConfigurationsScreen() {
-  const [primary, setPrimary] = useState(primaryColors[0]!);
-  const [secondary, setSecondary] = useState(secondaryColors[0]!);
-  const [green, setGreen] = useState(80);
-  const [yellow, setYellow] = useState(50);
-
   return (
     <div className="space-y-4">
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
@@ -94,34 +14,12 @@ export function ConfigurationsScreen() {
           <Field label="Platform name (Arabic)">
             <TextField dir="rtl" defaultValue="بلاك ستون لإدارة المشاريع" />
           </Field>
-          <Field label="Primary colour">
-            <Swatches
-              colors={primaryColors}
-              value={primary}
-              onChange={setPrimary}
-              label="Primary colour"
-            />
-          </Field>
-          <Field label="Secondary colour">
-            <Swatches
-              colors={secondaryColors}
-              value={secondary}
-              onChange={setSecondary}
-              label="Secondary colour"
-            />
-          </Field>
         </div>
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader icon={Globe2} title="Regional settings" tone="text-teal bg-teal-soft" />
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Default language">
-            <SelectField options={["English", "Arabic", "French"]} />
-          </Field>
-          <Field label="Currency">
-            <SelectField options={["SAR", "AED", "USD", "EUR"]} />
-          </Field>
           <Field label="Date format">
             <SelectField options={["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]} />
           </Field>
@@ -153,14 +51,6 @@ export function ConfigurationsScreen() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
-        <SectionHeader
-          icon={ListChecks}
-          title="FS Assessment Types"
-          tone="text-primary bg-primary-soft"
-        />
-        <AssessmentTypesSection />
-      </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader
