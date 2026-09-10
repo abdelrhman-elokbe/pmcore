@@ -624,6 +624,12 @@ export function LookupsScreen() {
             </div>
           )}
 
+          {active === "fs-assessment-types" && (
+            <div className="p-5">
+              <AssessmentTypesSection />
+            </div>
+          )}
+
           {active === "assessments" && (
             <div className="flex flex-col items-center gap-4 px-5 py-16 text-center">
               <p className="text-sm text-muted-foreground">No assessment templates configured</p>
