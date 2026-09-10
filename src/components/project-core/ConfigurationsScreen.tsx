@@ -78,11 +78,6 @@ function Threshold({
 }
 
 export function ConfigurationsScreen() {
-  const [primary, setPrimary] = useState(primaryColors[0]!);
-  const [secondary, setSecondary] = useState(secondaryColors[0]!);
-  const [green, setGreen] = useState(80);
-  const [yellow, setYellow] = useState(50);
-
   return (
     <div className="space-y-4">
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
