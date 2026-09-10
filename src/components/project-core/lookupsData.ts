@@ -35,6 +35,7 @@ export type LookupCategoryId =
   | "external-entities"
   | "lessons-learned"
   | "health-score"
+  | "fs-assessment-types"
   | "assessments";
 
 export const lookupCategories: { id: LookupCategoryId; label: string; singular: string }[] = [
