@@ -126,14 +126,6 @@ export function ConfigurationsScreen() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
-        <SectionHeader
-          icon={ListChecks}
-          title="FS Assessment Types"
-          tone="text-primary bg-primary-soft"
-        />
-        <AssessmentTypesSection />
-      </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader
