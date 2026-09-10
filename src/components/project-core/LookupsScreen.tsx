@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { usePlatform } from "@/lib/platform/context";
 import { Field, SelectField, TextField, Toggle, inputClass } from "./primitives";
+import { AssessmentTypesSection } from "./AssessmentTypesSection";
 import {
   companyTypes,
   entityCategories,
