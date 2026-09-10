@@ -89,34 +89,12 @@ export function ConfigurationsScreen() {
           <Field label="Platform name (Arabic)">
             <TextField dir="rtl" defaultValue="بلاك ستون لإدارة المشاريع" />
           </Field>
-          <Field label="Primary colour">
-            <Swatches
-              colors={primaryColors}
-              value={primary}
-              onChange={setPrimary}
-              label="Primary colour"
-            />
-          </Field>
-          <Field label="Secondary colour">
-            <Swatches
-              colors={secondaryColors}
-              value={secondary}
-              onChange={setSecondary}
-              label="Secondary colour"
-            />
-          </Field>
         </div>
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader icon={Globe2} title="Regional settings" tone="text-teal bg-teal-soft" />
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Default language">
-            <SelectField options={["English", "Arabic", "French"]} />
-          </Field>
-          <Field label="Currency">
-            <SelectField options={["SAR", "AED", "USD", "EUR"]} />
-          </Field>
           <Field label="Date format">
             <SelectField options={["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]} />
           </Field>
