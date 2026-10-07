@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { usePlatform } from "@/lib/platform/context";
+import { phasesStore } from "./configStores";
 import {
   GripVertical,
   Check,
@@ -363,7 +365,8 @@ function DetailPanel({
 }
 
 export function StagesScreen() {
-  const [phases, setPhases] = useState<Phase[]>(initialPhases);
+  const { tenantId } = usePlatform();
+  const [phases, setPhases] = phasesStore.use(tenantId);
   const [selected, setSelected] = useState<string | null>("proposal");
   const [, setTick] = useState(0);
   const [phaseNotif, setPhaseNotif] = useState<string | null>(null);

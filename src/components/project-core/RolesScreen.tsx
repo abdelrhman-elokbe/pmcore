@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { usePlatform } from "@/lib/platform/context";
+import { rolesStore } from "./configStores";
 import { Check, Plus, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -25,7 +27,8 @@ const emptyDraft = (): Draft => ({
 });
 
 export function RolesScreen() {
-  const [roles, setRoles] = useState<Role[]>(initialRoles);
+  const { tenantId } = usePlatform();
+  const [roles, setRoles] = rolesStore.use(tenantId);
   const [selected, setSelected] = useState(initialRoles[0]!.id);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
