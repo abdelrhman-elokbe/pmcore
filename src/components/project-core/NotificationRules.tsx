@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { usePlatform } from "@/lib/platform/context";
+import { notifRulesStore, scopeRules, type ScopeRules } from "./configStores";
 import { Bell, Mail, Plus, Trash2, Info } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
@@ -190,8 +192,14 @@ export function NotificationRules({
   /** When set, this is a sub-stage and may inherit from its parent stage. */
   parentName?: string;
 }) {
-  const [rules, setRules] = useState<NotificationRule[]>(() => getSeedRules(scopeId));
-  const [inherit, setInherit] = useState(!!parentName && getSeedRules(scopeId).length === 0);
+  const { tenantId } = usePlatform();
+  const [all, setAll] = notifRulesStore.use(tenantId);
+  const { rules, inherit } = scopeRules(all, scopeId, !!parentName);
+  const patchScope = (fn: (s: ScopeRules) => ScopeRules) =>
+    setAll((a) => ({ ...a, [scopeId]: fn(scopeRules(a, scopeId, !!parentName)) }));
+  const setRules = (fn: (p: NotificationRule[]) => NotificationRule[]) =>
+    patchScope((s) => ({ ...s, rules: fn(s.rules) }));
+  const setInherit = (v: boolean) => patchScope((s) => ({ ...s, inherit: v }));
 
   return (
     <div className="space-y-4">

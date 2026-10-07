@@ -77,6 +77,7 @@ export function ToolkitList() {
       <div className="flex justify-end gap-2">
         <Link
           to="/project-preview"
+          search={{ from: "toolkit" }}
           className="flex h-10 items-center gap-2 rounded-xl border border-border px-3 text-sm font-medium text-foreground hover:bg-muted"
         >
           <Eye className="size-4" /> Project view (PM)

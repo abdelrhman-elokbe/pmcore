@@ -139,3 +139,27 @@
     font-family: var(--font-sans);
   }
 }
+
+/* Client preview (tenant end-user look) */
+@theme inline {
+  --color-cp-bg: #f6f7f9;
+  --color-cp-card: #ffffff;
+  --color-cp-border: #e5e7eb;
+  --color-cp-text: #1c1f26;
+  --color-cp-text2: #4a4f5a;
+  --color-cp-muted: #7a7f8a;
+  --color-cp-purple: #534ab7;
+  --color-cp-purple-deep: #3c3489;
+  --color-cp-purple-soft: #eeedfe;
+  --color-cp-teal: #0f6e56;
+  --color-cp-teal-soft: #e1f5ee;
+  --color-cp-orange: #d85a30;
+  --color-cp-orange-soft: #faece7;
+  --color-cp-blue: #378add;
+  --color-cp-blue-soft: #e6f0fb;
+  --color-cp-red: #c93b3b;
+  --color-cp-red-soft: #fbe9e9;
+  --color-cp-amber: #b7791f;
+  --color-cp-amber-soft: #fdf3e1;
+  --font-cp: "Inter", ui-sans-serif, system-ui, sans-serif;
+}

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { lookupsStore } from "./configStores";
 import { Filter, MoreHorizontal, Pencil, Plus, Search, ShieldAlert, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -154,7 +155,7 @@ const td = "px-4 py-3 text-sm text-foreground align-middle";
 
 export function LookupsScreen() {
   const { tenantId, tenant } = usePlatform();
-  const [data, setData] = useState<TenantLookups>(() => getTenantLookups(tenantId));
+  const [data, setData] = lookupsStore.use(tenantId);
   const [active, setActive] = useState<LookupCategoryId>("categories");
   const [query, setQuery] = useState("");
   const [applyTo, setApplyTo] = useState<"new" | "both">("new");
@@ -166,7 +167,6 @@ export function LookupsScreen() {
   const [fCategory, setFCategory] = useState("All");
 
   useEffect(() => {
-    setData(getTenantLookups(tenantId));
     setQuery("");
   }, [tenantId]);
 

@@ -301,6 +301,7 @@ export function AppShell({
               {actions}
               <Link
                 to="/project-preview"
+                search={{ from: "platform" }}
                 className="flex h-10 items-center gap-2 rounded-xl border border-border px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <Eye className="size-4" /> Preview as tenant

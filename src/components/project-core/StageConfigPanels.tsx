@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { usePlatform } from "@/lib/platform/context";
+import { proposalStore } from "./configStores";
 import { X } from "lucide-react";
 import {
   bcFinancialFields,
@@ -45,8 +47,13 @@ function useToggleMap(keys: string[], initial = true) {
 }
 
 function ProposalConfig() {
-  const [fields, setFields] = useToggleMap(proposalRequiredFields);
-  const [confidential, setConfidential] = useState(true);
+  const { tenantId } = usePlatform();
+  const [settings, setSettings] = proposalStore.use(tenantId);
+  const fields = settings.required;
+  const confidential = settings.confidential;
+  const setFields = (fn: (p: Record<string, boolean>) => Record<string, boolean>) =>
+    setSettings((s) => ({ ...s, required: fn(s.required) }));
+  const setConfidential = (v: boolean) => setSettings((s) => ({ ...s, confidential: v }));
   return (
     <div className="space-y-5">
       <div>

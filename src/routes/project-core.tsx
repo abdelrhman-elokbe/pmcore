@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import {
   ArrowLeft,
   Building2,
+  Eye,
   Layers,
   ListTree,
   Save,
@@ -14,7 +15,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StagesScreen } from "@/components/project-core/StagesScreen";
-import { getAssignment, initialPhases } from "@/components/project-core/data";
+import { getAssignment } from "@/components/project-core/data";
+import { phasesStore } from "@/components/project-core/configStores";
 import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
@@ -130,6 +132,13 @@ function ProjectCoreAdmin() {
           <p className="text-xs text-muted-foreground">{current.subtitle}</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
+          <Link
+            to="/project-preview"
+            search={{ from: screen }}
+            className="flex h-10 items-center gap-2 rounded-xl border border-primary bg-primary-soft px-4 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+          >
+            <Eye className="size-4" /> Preview
+          </Link>
           <button
             type="button"
             onClick={() => toast("Changes discarded")}
@@ -141,7 +150,8 @@ function ProjectCoreAdmin() {
             type="button"
             onClick={() => {
               if (screen === "stages") {
-                const missing = initialPhases
+                const missing = phasesStore
+                  .get(tenantId)
                   .flatMap((ph) => ph.stages)
                   .filter((st) => st.mandatory && !getAssignment(st.id).standard);
                 if (missing.length > 0) {
