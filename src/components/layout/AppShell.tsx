@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import {
+  Wrench, Link } from "@tanstack/react-router";
 import {
   Bell,
   ChevronDown,
@@ -57,6 +58,7 @@ const tenantNav: NavItem[] = [
   { label: "Roles & Permissions", to: "/project-core", icon: ShieldCheck, search: { screen: "roles" } },
   { label: "Organisation", to: "/organisation", icon: Network },
   { label: "Business Rules", to: "/business-rules", icon: Scale, hostOnly: true },
+  { label: "Project Toolkit", to: "/toolkit", icon: Wrench },
   { label: "Lookups & Terminology", to: "/lookups", icon: BookMarked },
   { label: "Notifications", to: "/notifications", icon: BellRing },
   {
@@ -299,12 +301,12 @@ export function AppShell({
             </div>
             <div className="ml-auto flex items-center gap-2">
               {actions}
-              <button
-                type="button"
+              <Link
+                to="/project-preview"
                 className="flex h-10 items-center gap-2 rounded-xl border border-border px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <Eye className="size-4" /> Preview as tenant
-              </button>
+              </Link>
             </div>
           </div>
           {children}
