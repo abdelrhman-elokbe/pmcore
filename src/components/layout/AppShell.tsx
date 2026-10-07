@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import {
-  Wrench, Link } from "@tanstack/react-router";
-import {
+  Wrench,
   Bell,
   ChevronDown,
   Globe,
