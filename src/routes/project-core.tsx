@@ -108,6 +108,11 @@ function ProjectCoreAdmin() {
   useEffect(() => {
     if (search.screen) setScreen(search.screen);
   }, [search.screen]);
+  const navigate = Route.useNavigate();
+  const go = (id: ScreenId) => {
+    setScreen(id);
+    navigate({ search: { screen: id } });
+  };
   const current = screens.find((s) => s.id === screen)!;
 
   return (
@@ -192,7 +197,7 @@ function ProjectCoreAdmin() {
               <button
                 key={id}
                 type="button"
-                onClick={() => setScreen(id)}
+                onClick={() => go(id)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[15px] transition-colors",
                   screen === id
@@ -213,7 +218,7 @@ function ProjectCoreAdmin() {
               <button
                 key={id}
                 type="button"
-                onClick={() => setScreen(id)}
+                onClick={() => go(id)}
                 className={cn(
                   "shrink-0 rounded-xl px-3 py-2 text-sm",
                   screen === id ? "bg-teal-soft font-semibold text-teal" : "text-muted-foreground",
