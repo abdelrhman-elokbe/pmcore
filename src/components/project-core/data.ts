@@ -222,7 +222,11 @@ export type StageWorkflowAssignment = {
   useConfidential: boolean;
 };
 
-export const workflowAssignments: Record<string, StageWorkflowAssignment> = {};
+export const workflowAssignments: Record<string, StageWorkflowAssignment> = {
+  proposal: { standard: "wf-standard-stage", confidential: "wf-confidential", useConfidential: true },
+  execution: { standard: "wf-fast-track", confidential: null, useConfidential: false },
+  closure: { standard: "wf-fast-track", confidential: null, useConfidential: false },
+};
 
 export const getAssignment = (stageId: string): StageWorkflowAssignment =>
   workflowAssignments[stageId] ?? { standard: null, confidential: null, useConfidential: true };

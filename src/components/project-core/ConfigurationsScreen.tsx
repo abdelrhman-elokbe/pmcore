@@ -1,18 +1,22 @@
 import { Link } from "@tanstack/react-router";
+import { usePlatform } from "@/lib/platform/context";
+import { brandingStore } from "./configStores";
 import { Palette, Globe2, Network, Activity, KeyRound } from "lucide-react";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
 
 export function ConfigurationsScreen() {
+  const { tenantId } = usePlatform();
+  const [b, setB] = brandingStore.use(tenantId);
   return (
     <div className="space-y-4">
       <section className="rounded-2xl border border-border bg-card p-5 shadow-card">
         <SectionHeader icon={Palette} title="Branding" tone="text-primary bg-primary-soft" />
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Platform name (English)">
-            <TextField defaultValue="Blackstone Project Core" />
+            <TextField value={b.nameEn} onChange={(e) => setB((p) => ({ ...p, nameEn: e.target.value }))} />
           </Field>
           <Field label="Platform name (Arabic)">
-            <TextField dir="rtl" defaultValue="بلاك ستون لإدارة المشاريع" />
+            <TextField dir="rtl" value={b.nameAr} onChange={(e) => setB((p) => ({ ...p, nameAr: e.target.value }))} />
           </Field>
         </div>
       </section>
@@ -21,10 +25,10 @@ export function ConfigurationsScreen() {
         <SectionHeader icon={Globe2} title="Regional settings" tone="text-teal bg-teal-soft" />
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Date format">
-            <SelectField options={["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]} />
+            <SelectField value={b.dateFormat} onChange={(e) => setB((p) => ({ ...p, dateFormat: e.target.value }))} options={["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]} />
           </Field>
           <Field label="Number format">
-            <SelectField options={["1,234.56", "1.234,56", "1 234.56"]} />
+            <SelectField value={b.numberFormat} onChange={(e) => setB((p) => ({ ...p, numberFormat: e.target.value }))} options={["1,234.56", "1.234,56", "1 234.56"]} />
           </Field>
         </div>
       </section>
