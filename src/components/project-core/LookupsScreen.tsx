@@ -1,10 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, MoreHorizontal, Pencil, Plus, Search, ShieldAlert, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { usePlatform } from "@/lib/platform/context";
 import { Field, SelectField, TextField, Toggle, inputClass } from "./primitives";
-import { AssessmentTypesSection } from "./AssessmentTypesSection";
 import {
   companyTypes,
   entityCategories,
@@ -181,7 +181,7 @@ export function LookupsScreen() {
       "external-entities": data["external-entities"].length,
       "lessons-learned": data["lessons-learned"].length,
       "health-score": data["health-score"].length,
-      "fs-assessment-types": 3,
+      "fs-assessment-types": 0,
     }),
     [data],
   );
@@ -616,7 +616,13 @@ export function LookupsScreen() {
 
           {active === "fs-assessment-types" && (
             <div className="p-5">
-              <AssessmentTypesSection />
+              <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
+                FS assessment types now live on the{" "}
+                <Link to="/project-core" search={{ screen: "toolkit", tool: "feasibility-study" }} className="font-semibold text-primary">
+                  Project Toolkit → Feasibility Study
+                </Link>{" "}
+                tool page.
+              </p>
             </div>
           )}
 

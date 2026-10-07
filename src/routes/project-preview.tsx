@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { Lock, Plus, X } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft, Lock, Plus, X } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { initialPhases } from "@/components/project-core/data";
 import { toolsForStage, useTools } from "@/components/project-core/toolkitData";
@@ -25,7 +25,13 @@ function ProjectPreview() {
   const [picker, setPicker] = useState<string | null>(null);
 
   return (
-    <AppShell title="Project view (PM)" subtitle="Preview · Heritage Site Digitisation · Strategic · Archaeological Projects">
+    <AppShell title="Project view (PM)" subtitle="Preview · Heritage Site Digitisation · Strategic · Archaeological Projects"
+      actions={
+        <Link to="/project-core" search={{ screen: "toolkit" }} className="flex h-10 items-center gap-2 rounded-xl border border-border px-3 text-sm font-medium text-foreground hover:bg-muted">
+          <ArrowLeft className="size-4" /> Project Toolkit
+        </Link>
+      }
+    >
       <div className="space-y-5">
         {initialPhases.map((ph, pi) => (
           <section key={ph.id} className="rounded-2xl border border-border bg-card p-4 shadow-card">
