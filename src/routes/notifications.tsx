@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BellRing } from "lucide-react";
-import { SectionPlaceholder } from "@/components/layout/SectionPlaceholder";
+import { Info } from "lucide-react";
+import { AppShell } from "@/components/layout/AppShell";
+import { RuleCard } from "@/components/project-core/NotificationRules";
+import { globalDefaultRules } from "@/components/project-core/notificationsData";
 
 export const Route = createFileRoute("/notifications")({
   head: () => ({
@@ -8,26 +10,30 @@ export const Route = createFileRoute("/notifications")({
       { title: "Notifications | Blackstone Product 2.0" },
       {
         name: "description",
-        content:
-          "Configure notification events, channels, recipients, bilingual templates, quiet hours and reminder cadence.",
+        content: "Tenant-wide default notification rules: events, recipients, channels and templates.",
       },
       { property: "og:title", content: "Notifications | Blackstone Product 2.0" },
-      { property: "og:description", content: "Event-driven notification configuration per tenant." },
+      { property: "og:description", content: "Global default notifications, overridable per stage." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => (
-    <SectionPlaceholder
-      title="Notifications"
-      subtitle="Events, channels, recipients and bilingual templates with variables, previews and test sends."
-      icon={BellRing}
-      items={[
-        "Event table: submitted, approved, returned, rejected, SLA breach…",
-        "Channels: in-app, email, SMS",
-        "Recipients by role, dynamic role or specific user",
-        "Bilingual rich-text templates with {{variables}}",
-        "Quiet hours and reminder cadence",
-        "Preview and send test",
-      ]}
-    />
-  ),
+  component: NotificationsPage,
 });
+
+function NotificationsPage() {
+  return (
+    <AppShell title="Notifications" subtitle="Global default rules for this tenant">
+      <div className="space-y-4">
+        <p className="flex items-start gap-2 rounded-xl bg-primary-soft px-4 py-3 text-sm text-accent-foreground">
+          <Info className="mt-0.5 size-4 shrink-0" />
+          These are the defaults. Rules set on a stage or sub-stage in Lifecycle (Stages) →
+          Notifications override the default for the same event.
+        </p>
+        {globalDefaultRules.map((r) => (
+          <RuleCard key={r.id} rule={r} scopeName="Proposal" readOnly />
+        ))}
+      </div>
+    </AppShell>
+  );
+}

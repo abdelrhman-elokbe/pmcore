@@ -7,6 +7,7 @@ import {
   ChevronDown,
   AlertTriangle,
   ExternalLink,
+  Bell,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,8 @@ import {
 } from "./data";
 import { CheckRow, Field, SelectField, TextField, Toggle } from "./primitives";
 import { StageConfig } from "./StageConfigPanels";
+import { NotificationRules } from "./NotificationRules";
+import { StageToolkitItems } from "./StageToolkitItems";
 
 const tabs = [
   "General",
@@ -33,6 +36,8 @@ const tabs = [
   "Business rules",
   "Approval workflow",
   "Stage config",
+  "Notifications",
+  "Toolkit items",
 ] as const;
 type Tab = (typeof tabs)[number];
 
@@ -229,7 +234,9 @@ function DetailPanel({
   stage,
   onChange,
   onAssignmentChange,
+  parentName,
 }: {
+  parentName: string;
   stage: Stage;
   onChange: (patch: Partial<Stage>) => void;
   onAssignmentChange?: (() => void) | undefined;
@@ -346,6 +353,10 @@ function DetailPanel({
 
 
         {tab === "Stage config" && <StageConfig stage={stage} />}
+        {tab === "Notifications" && (
+          <NotificationRules scopeId={stage.id} scopeName={stage.name} parentName={parentName} />
+        )}
+        {tab === "Toolkit items" && <StageToolkitItems stageId={stage.id} />}
       </div>
     </section>
   );
@@ -353,8 +364,9 @@ function DetailPanel({
 
 export function StagesScreen() {
   const [phases, setPhases] = useState<Phase[]>(initialPhases);
-  const [selected, setSelected] = useState<string | null>("feasibility");
+  const [selected, setSelected] = useState<string | null>("proposal");
   const [, setTick] = useState(0);
+  const [phaseNotif, setPhaseNotif] = useState<string | null>(null);
 
   const patch = (id: string, p: Partial<Stage>) =>
     setPhases((prev) =>
@@ -375,7 +387,24 @@ export function StagesScreen() {
             <div className="min-w-0">
               <p className="text-[15px] font-semibold text-foreground">{phase.name}</p>
             </div>
+            <button
+              type="button"
+              onClick={() => setPhaseNotif(phaseNotif === phase.id ? null : phase.id)}
+              className={cn(
+                "ml-auto flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors",
+                phaseNotif === phase.id
+                  ? "border-primary bg-primary-soft text-primary"
+                  : "border-border text-muted-foreground hover:bg-muted",
+              )}
+            >
+              <Bell className="size-3.5" /> Stage notifications
+            </button>
           </div>
+          {phaseNotif === phase.id ? (
+            <div className="mt-2 rounded-2xl border border-border bg-card p-4">
+              <NotificationRules scopeId={phase.id} scopeName={phase.name} />
+            </div>
+          ) : null}
 
           <div className="mt-2 space-y-2">
             {phase.stages.map((stage, i) => {
@@ -447,6 +476,7 @@ export function StagesScreen() {
                       stage={stage}
                       onChange={(p) => patch(stage.id, p)}
                       onAssignmentChange={() => setTick((t) => t + 1)}
+                      parentName={phase.name}
                     />
                   ) : null}
                 </div>

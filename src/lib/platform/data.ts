@@ -115,6 +115,20 @@ export type ConfigChange = {
 
 export const recentChanges: ConfigChange[] = [
   {
+    actor: "admin",
+    action: "Moved Feasibility Study & Business Case into Project Toolkit (mandatory)",
+    tenant: "Dubai Culture (DCAA)",
+    time: "08/09/2026 11:05 · 5 mins ago",
+    section: "Project Toolkit",
+  },
+  {
+    actor: "s.almansoori",
+    action: "Added stage notification “Submitted for approval” on Proposal",
+    tenant: "Dubai Culture (DCAA)",
+    time: "08/09/2026 10:58 · 12 mins ago",
+    section: "Lifecycle",
+  },
+  {
     actor: "s.almansoori",
     action: "Disabled project status “At Risk”",
     tenant: "Dubai Culture (DCAA)",

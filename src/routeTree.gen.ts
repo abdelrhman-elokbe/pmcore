@@ -19,10 +19,13 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrganisationRouteImport } from './routes/organisation'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectCoreRouteImport } from './routes/project-core'
+import { Route as ProjectPreviewRouteImport } from './routes/project-preview'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TenantRouteImport } from './routes/tenant'
 import { Route as TenantsRouteImport } from './routes/tenants'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
+import { Route as ToolkitIndexRouteImport } from './routes/toolkit.index'
+import { Route as ToolkitToolIdRouteImport } from './routes/toolkit.$toolId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -74,6 +77,11 @@ const ProjectCoreRoute = ProjectCoreRouteImport.update({
   path: '/project-core',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectPreviewRoute = ProjectPreviewRouteImport.update({
+  id: '/project-preview',
+  path: '/project-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -94,6 +102,16 @@ const WorkflowsRoute = WorkflowsRouteImport.update({
   path: '/workflows',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolkitIndexRoute = ToolkitIndexRouteImport.update({
+  id: '/toolkit/',
+  path: '/toolkit/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolkitToolIdRoute = ToolkitToolIdRouteImport.update({
+  id: '/toolkit/$toolId',
+  path: '/toolkit/$toolId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -106,10 +124,13 @@ export interface FileRoutesByFullPath {
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
+  '/project-preview': typeof ProjectPreviewRoute
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
+  '/toolkit/$toolId': typeof ToolkitToolIdRoute
+  '/toolkit/': typeof ToolkitIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -122,10 +143,13 @@ export interface FileRoutesByTo {
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
+  '/project-preview': typeof ProjectPreviewRoute
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
+  '/toolkit/$toolId': typeof ToolkitToolIdRoute
+  '/toolkit': typeof ToolkitIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,10 +163,13 @@ export interface FileRoutesById {
   '/organisation': typeof OrganisationRoute
   '/products': typeof ProductsRoute
   '/project-core': typeof ProjectCoreRoute
+  '/project-preview': typeof ProjectPreviewRoute
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
   '/workflows': typeof WorkflowsRoute
+  '/toolkit/$toolId': typeof ToolkitToolIdRoute
+  '/toolkit/': typeof ToolkitIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,10 +184,13 @@ export interface FileRouteTypes {
     | '/organisation'
     | '/products'
     | '/project-core'
+    | '/project-preview'
     | '/settings'
     | '/tenant'
     | '/tenants'
     | '/workflows'
+    | '/toolkit/$toolId'
+    | '/toolkit/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -173,10 +203,13 @@ export interface FileRouteTypes {
     | '/organisation'
     | '/products'
     | '/project-core'
+    | '/project-preview'
     | '/settings'
     | '/tenant'
     | '/tenants'
     | '/workflows'
+    | '/toolkit/$toolId'
+    | '/toolkit'
   id:
     | '__root__'
     | '/'
@@ -189,10 +222,13 @@ export interface FileRouteTypes {
     | '/organisation'
     | '/products'
     | '/project-core'
+    | '/project-preview'
     | '/settings'
     | '/tenant'
     | '/tenants'
     | '/workflows'
+    | '/toolkit/$toolId'
+    | '/toolkit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -206,10 +242,13 @@ export interface RootRouteChildren {
   OrganisationRoute: typeof OrganisationRoute
   ProductsRoute: typeof ProductsRoute
   ProjectCoreRoute: typeof ProjectCoreRoute
+  ProjectPreviewRoute: typeof ProjectPreviewRoute
   SettingsRoute: typeof SettingsRoute
   TenantRoute: typeof TenantRoute
   TenantsRoute: typeof TenantsRoute
   WorkflowsRoute: typeof WorkflowsRoute
+  ToolkitToolIdRoute: typeof ToolkitToolIdRoute
+  ToolkitIndexRoute: typeof ToolkitIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -284,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectCoreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project-preview': {
+      id: '/project-preview'
+      path: '/project-preview'
+      fullPath: '/project-preview'
+      preLoaderRoute: typeof ProjectPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -312,6 +358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkflowsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/toolkit/': {
+      id: '/toolkit/'
+      path: '/toolkit'
+      fullPath: '/toolkit/'
+      preLoaderRoute: typeof ToolkitIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/toolkit/$toolId': {
+      id: '/toolkit/$toolId'
+      path: '/toolkit/$toolId'
+      fullPath: '/toolkit/$toolId'
+      preLoaderRoute: typeof ToolkitToolIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -326,10 +386,13 @@ const rootRouteChildren: RootRouteChildren = {
   OrganisationRoute: OrganisationRoute,
   ProductsRoute: ProductsRoute,
   ProjectCoreRoute: ProjectCoreRoute,
+  ProjectPreviewRoute: ProjectPreviewRoute,
   SettingsRoute: SettingsRoute,
   TenantRoute: TenantRoute,
   TenantsRoute: TenantsRoute,
   WorkflowsRoute: WorkflowsRoute,
+  ToolkitToolIdRoute: ToolkitToolIdRoute,
+  ToolkitIndexRoute: ToolkitIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
