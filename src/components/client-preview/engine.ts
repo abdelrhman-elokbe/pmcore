@@ -422,7 +422,7 @@ export function fireEvent(
   tid: string,
   stage: FlatStage,
   event: string,
-  ctx: { project: string; actor: string; approverRole?: string; comment?: string; prefix?: string },
+  ctx: { project: string; actor: string; approverRole?: string | undefined; comment?: string | undefined; prefix?: string | undefined },
 ): PNotif[] {
   const all = notifRulesStore.get(tid);
   const st = scopeRules(all, stage.id, true);
