@@ -10,6 +10,7 @@ import {
   Settings2,
   ShieldCheck,
   ToggleRight,
+  Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StagesScreen } from "@/components/project-core/StagesScreen";
@@ -18,13 +19,17 @@ import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
 import { LookupsScreen } from "@/components/project-core/LookupsScreen";
+import { ToolDetail, ToolkitList, validateToolkit } from "@/components/project-core/ToolkitScreen";
+import { toolkitStore } from "@/components/project-core/toolkitData";
 import { usePlatform } from "@/lib/platform/context";
 
-type ScreenId = "stages" | "features" | "roles" | "lookups" | "configurations";
+type ScreenId = "stages" | "toolkit" | "features" | "roles" | "lookups" | "configurations";
 
 export const Route = createFileRoute("/project-core")({
-  validateSearch: (search: Record<string, unknown>): { screen?: ScreenId } => {
+  validateSearch: (search: Record<string, unknown>): { screen?: ScreenId; tool?: string } => {
     const s = search["screen"];
+    const tool = typeof search["tool"] === "string" ? (search["tool"] as string) : undefined;
+    if (s === "toolkit") return tool ? { screen: s, tool } : { screen: s };
     return s === "features" ||
       s === "roles" ||
       s === "lookups" ||
@@ -58,6 +63,13 @@ const screens = [
     icon: Layers,
     title: "Stages",
     subtitle: "Configure the project lifecycle stages, criteria and approval chains",
+  },
+  {
+    id: "toolkit",
+    label: "Project Toolkit",
+    icon: Wrench,
+    title: "Project Toolkit",
+    subtitle: "Reusable analysis tools that can be attached to any stage, optional or mandatory per project",
   },
   {
     id: "features",
@@ -132,6 +144,15 @@ function ProjectCoreAdmin() {
                   return;
                 }
               }
+              if (screen === "toolkit") {
+                const err = validateToolkit(toolkitStore.get());
+                if (err) {
+                  toast.error(err);
+                  return;
+                }
+                toast.success("Project Toolkit configuration saved");
+                return;
+              }
               toast.success(`${current.title} configuration saved`);
             }}
             className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
@@ -204,6 +225,8 @@ function ProjectCoreAdmin() {
           </div>
 
           {screen === "stages" && <StagesScreen />}
+          {screen === "toolkit" &&
+            (search.tool ? <ToolDetail toolId={search.tool} /> : <ToolkitList />)}
           {screen === "features" && <FeaturesScreen />}
           {screen === "roles" && <RolesScreen />}
           {screen === "lookups" && <LookupsScreen />}

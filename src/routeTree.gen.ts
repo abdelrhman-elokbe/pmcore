@@ -23,9 +23,9 @@ import { Route as ProjectPreviewRouteImport } from './routes/project-preview'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TenantRouteImport } from './routes/tenant'
 import { Route as TenantsRouteImport } from './routes/tenants'
+import { Route as ToolkitRouteImport } from './routes/toolkit'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
-import { Route as ToolkitIndexRouteImport } from './routes/toolkit.index'
-import { Route as ToolkitToolIdRouteImport } from './routes/toolkit.$toolId'
+import { Route as ToolkitToolIdRouteImport } from './routes/toolkit_.$toolId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -97,18 +97,18 @@ const TenantsRoute = TenantsRouteImport.update({
   path: '/tenants',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolkitRoute = ToolkitRouteImport.update({
+  id: '/toolkit',
+  path: '/toolkit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkflowsRoute = WorkflowsRouteImport.update({
   id: '/workflows',
   path: '/workflows',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToolkitIndexRoute = ToolkitIndexRouteImport.update({
-  id: '/toolkit/',
-  path: '/toolkit/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ToolkitToolIdRoute = ToolkitToolIdRouteImport.update({
-  id: '/toolkit/$toolId',
+  id: '/toolkit_/$toolId',
   path: '/toolkit/$toolId',
   getParentRoute: () => rootRouteImport,
 } as any)
@@ -128,9 +128,9 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
+  '/toolkit': typeof ToolkitRoute
   '/workflows': typeof WorkflowsRoute
   '/toolkit/$toolId': typeof ToolkitToolIdRoute
-  '/toolkit/': typeof ToolkitIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -147,9 +147,9 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
+  '/toolkit': typeof ToolkitRoute
   '/workflows': typeof WorkflowsRoute
   '/toolkit/$toolId': typeof ToolkitToolIdRoute
-  '/toolkit': typeof ToolkitIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -167,9 +167,9 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/tenant': typeof TenantRoute
   '/tenants': typeof TenantsRoute
+  '/toolkit': typeof ToolkitRoute
   '/workflows': typeof WorkflowsRoute
-  '/toolkit/$toolId': typeof ToolkitToolIdRoute
-  '/toolkit/': typeof ToolkitIndexRoute
+  '/toolkit_/$toolId': typeof ToolkitToolIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -188,9 +188,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tenant'
     | '/tenants'
+    | '/toolkit'
     | '/workflows'
     | '/toolkit/$toolId'
-    | '/toolkit/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -207,9 +207,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tenant'
     | '/tenants'
+    | '/toolkit'
     | '/workflows'
     | '/toolkit/$toolId'
-    | '/toolkit'
   id:
     | '__root__'
     | '/'
@@ -226,9 +226,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tenant'
     | '/tenants'
+    | '/toolkit'
     | '/workflows'
-    | '/toolkit/$toolId'
-    | '/toolkit/'
+    | '/toolkit_/$toolId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -246,9 +246,9 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TenantRoute: typeof TenantRoute
   TenantsRoute: typeof TenantsRoute
+  ToolkitRoute: typeof ToolkitRoute
   WorkflowsRoute: typeof WorkflowsRoute
   ToolkitToolIdRoute: typeof ToolkitToolIdRoute
-  ToolkitIndexRoute: typeof ToolkitIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -351,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/toolkit': {
+      id: '/toolkit'
+      path: '/toolkit'
+      fullPath: '/toolkit'
+      preLoaderRoute: typeof ToolkitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/workflows': {
       id: '/workflows'
       path: '/workflows'
@@ -358,15 +365,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkflowsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/toolkit/': {
-      id: '/toolkit/'
-      path: '/toolkit'
-      fullPath: '/toolkit/'
-      preLoaderRoute: typeof ToolkitIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/toolkit/$toolId': {
-      id: '/toolkit/$toolId'
+    '/toolkit_/$toolId': {
+      id: '/toolkit_/$toolId'
       path: '/toolkit/$toolId'
       fullPath: '/toolkit/$toolId'
       preLoaderRoute: typeof ToolkitToolIdRouteImport
@@ -390,9 +390,9 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TenantRoute: TenantRoute,
   TenantsRoute: TenantsRoute,
+  ToolkitRoute: ToolkitRoute,
   WorkflowsRoute: WorkflowsRoute,
   ToolkitToolIdRoute: ToolkitToolIdRoute,
-  ToolkitIndexRoute: ToolkitIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

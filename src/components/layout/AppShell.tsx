@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Wrench,
   Bell,
   ChevronDown,
   Globe,
