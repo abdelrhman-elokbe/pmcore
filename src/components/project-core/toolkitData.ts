@@ -65,7 +65,7 @@ const seed: Tool[] = [
     allowedStages: ["initiation", "proposal"],
     mode: "Mandatory",
     mandatoryScope: { projectTypes: [], categories: ["Strategic"] },
-    defaultStage: "initiation",
+    defaultStage: "proposal",
   },
   {
     id: "business-case",
@@ -82,7 +82,7 @@ const seed: Tool[] = [
     allowedStages: ["initiation", "proposal"],
     mode: "Mandatory",
     mandatoryScope: { projectTypes: [], categories: [] },
-    defaultStage: "initiation",
+    defaultStage: "proposal",
   },
   {
     id: "swot",
