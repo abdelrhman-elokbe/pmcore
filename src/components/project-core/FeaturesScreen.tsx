@@ -77,9 +77,11 @@ export function FeaturesScreen() {
             {expanded && (
               <div className="grid gap-2 border-t border-border p-4 md:grid-cols-2">
                 {section.items.map((item, i) => (
-                  <button
+                  <div
                     key={item.name}
-                    type="button"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && toggleItem(section.id, i, !item.enabled)}
                     onClick={() => toggleItem(section.id, i, !item.enabled)}
                     className={cn(
                       "flex items-center gap-3 rounded-xl border border-border px-4 py-3 text-left transition-opacity",
@@ -89,14 +91,14 @@ export function FeaturesScreen() {
                     <span className={cn("flex-1 text-sm", item.enabled ? "text-foreground" : "text-muted-foreground")}>
                       {item.name}
                     </span>
-                    <span className="ml-auto">
+                    <span className="ml-auto" onClick={(e) => e.stopPropagation()}>
                       <Toggle
                         checked={item.enabled}
                         onChange={(v) => toggleItem(section.id, i, v)}
                         label={item.name}
                       />
                     </span>
-                  </button>
+                  </div>
                 ))}
               </div>
             )}
