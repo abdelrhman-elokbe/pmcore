@@ -58,7 +58,6 @@ const tenantNav: NavItem[] = [
   { label: "Roles & Permissions", to: "/project-core", icon: ShieldCheck, search: { screen: "roles" } },
   { label: "Organisation", to: "/organisation", icon: Network },
   { label: "Business Rules", to: "/business-rules", icon: Scale, hostOnly: true },
-  { label: "Project Toolkit", to: "/toolkit", icon: Wrench },
   { label: "Lookups & Terminology", to: "/lookups", icon: BookMarked },
   { label: "Notifications", to: "/notifications", icon: BellRing },
   {

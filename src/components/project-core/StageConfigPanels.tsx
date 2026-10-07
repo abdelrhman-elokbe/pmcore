@@ -90,7 +90,7 @@ export function FeasibilityConfig() {
         ))}
       </div>
       <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-        Assessment types and parameters are managed from Lookups → FS Assessment Types.
+        Assessment types and parameters are managed in Project Toolkit → Feasibility Study.
       </p>
     </div>
   );

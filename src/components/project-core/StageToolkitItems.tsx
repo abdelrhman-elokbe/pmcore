@@ -6,8 +6,8 @@ function Row({ t, locked }: { t: Tool; locked: boolean }) {
   const Icon = t.icon;
   return (
     <Link
-      to="/toolkit/$toolId"
-      params={{ toolId: t.id }}
+      to="/project-core"
+      search={{ screen: "toolkit", tool: t.id }}
       className="flex items-center gap-3 rounded-xl border border-border px-4 py-3 hover:bg-muted/50"
     >
       <span className="flex size-8 items-center justify-center rounded-xl bg-primary-soft text-primary">
@@ -28,7 +28,7 @@ export function StageToolkitItems({ stageId }: { stageId: string }) {
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
         Read-only. Tools are configured in{" "}
-        <Link to="/toolkit" className="font-semibold text-primary">
+        <Link to="/project-core" search={{ screen: "toolkit" }} className="font-semibold text-primary">
           Project Toolkit
         </Link>
         .
