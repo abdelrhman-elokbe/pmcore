@@ -73,7 +73,7 @@ function ProposalConfig() {
   );
 }
 
-function FeasibilityConfig() {
+export function FeasibilityConfig() {
   const [types, setTypes] = useState([true, true]);
   return (
     <div className="space-y-4">
@@ -90,13 +90,13 @@ function FeasibilityConfig() {
         ))}
       </div>
       <p className="rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-        Assessment types and parameters are managed from Configurations → FS Assessment Types.
+        Assessment types and parameters are managed from Lookups → FS Assessment Types.
       </p>
     </div>
   );
 }
 
-function BusinessCaseConfig() {
+export function BusinessCaseConfig() {
   const [types, setTypes] = useState([true, true]);
   const [financial, setFinancial] = useToggleMap(bcFinancialFields);
   return (
@@ -288,10 +288,6 @@ export function StageConfig({ stage }: { stage: Stage }) {
   switch (stage.config) {
     case "proposal":
       return <ProposalConfig />;
-    case "feasibility":
-      return <FeasibilityConfig />;
-    case "businessCase":
-      return <BusinessCaseConfig />;
     case "execution":
       return <ExecutionConfig />;
     case "closure":

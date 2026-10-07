@@ -25,6 +25,8 @@ import {
 } from "./data";
 import { CheckRow, Field, SelectField, TextField, Toggle } from "./primitives";
 import { StageConfig } from "./StageConfigPanels";
+import { NotificationRules } from "./NotificationRules";
+import { StageToolkitItems } from "./StageToolkitItems";
 
 const tabs = [
   "General",
@@ -33,6 +35,8 @@ const tabs = [
   "Business rules",
   "Approval workflow",
   "Stage config",
+  "Notifications",
+  "Toolkit items",
 ] as const;
 type Tab = (typeof tabs)[number];
 
@@ -346,6 +350,10 @@ function DetailPanel({
 
 
         {tab === "Stage config" && <StageConfig stage={stage} />}
+        {tab === "Notifications" && (
+          <NotificationRules scopeId={stage.id} scopeName={stage.name} parentName={parentName} />
+        )}
+        {tab === "Toolkit items" && <StageToolkitItems stageId={stage.id} />}
       </div>
     </section>
   );
@@ -353,7 +361,7 @@ function DetailPanel({
 
 export function StagesScreen() {
   const [phases, setPhases] = useState<Phase[]>(initialPhases);
-  const [selected, setSelected] = useState<string | null>("feasibility");
+  const [selected, setSelected] = useState<string | null>("proposal");
   const [, setTick] = useState(0);
 
   const patch = (id: string, p: Partial<Stage>) =>
