@@ -21,8 +21,7 @@ import { FeaturesScreen } from "@/components/project-core/FeaturesScreen";
 import { RolesScreen } from "@/components/project-core/RolesScreen";
 import { ConfigurationsScreen } from "@/components/project-core/ConfigurationsScreen";
 import { LookupsScreen } from "@/components/project-core/LookupsScreen";
-import { ToolDetail, ToolkitList, validateToolkit } from "@/components/project-core/ToolkitScreen";
-import { toolkitStore } from "@/components/project-core/toolkitData";
+import { ToolDetail, ToolkitList } from "@/components/project-core/ToolkitScreen";
 import { usePlatform } from "@/lib/platform/context";
 
 type ScreenId = "stages" | "toolkit" | "features" | "roles" | "lookups" | "configurations";
