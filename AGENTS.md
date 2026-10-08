@@ -14,3 +14,4 @@
 - Project Core draft config (stages, features, roles, lookups, notification rules, proposal fields, branding) lives in per-tenant stores (`createTenantStore`) so the Client preview reads unsaved admin edits live; never move it back to component-local state.
 - The Client preview (`/project-preview`, `src/components/client-preview/`) derives everything from those stores plus `toolkitStore`; demo projects/notifications are in-memory per tenant and resettable.
 - Client preview uses its own `cp-*` theme tokens (client look); the admin console keeps the main design tokens.
+- Client preview screen modules share an enabled-lifecycle classification helper to distinguish initiation proposals from approved projects, so menu counts and approval transitions stay consistent when stages change.
