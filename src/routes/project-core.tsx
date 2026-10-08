@@ -164,21 +164,13 @@ function ProjectCoreAdmin() {
                   return;
                 }
               }
-              if (screen === "toolkit") {
-                const err = validateToolkit(toolkitStore.get());
-                if (err) {
-                  toast.error(err);
-                  return;
-                }
-                toast.success("Project Toolkit configuration saved");
-                return;
-              }
               toast.success(`${current.title} configuration saved`);
             }}
             className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Save className="size-4" /> Save
           </button>
+          )}
         </div>
       </header>
 
