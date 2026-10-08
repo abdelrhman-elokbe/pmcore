@@ -141,13 +141,16 @@ function ProjectCoreAdmin() {
           >
             <Eye className="size-4" /> Preview
           </Link>
-          <button
-            type="button"
-            onClick={() => toast("Changes discarded")}
-            className="h-10 rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            Discard
-          </button>
+          {screen !== "toolkit" && (
+            <button
+              type="button"
+              onClick={() => toast("Changes discarded")}
+              className="h-10 rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              Discard
+            </button>
+          )}
+          {screen !== "toolkit" && (
           <button
             type="button"
             onClick={() => {
