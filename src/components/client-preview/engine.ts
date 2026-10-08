@@ -259,6 +259,9 @@ export type PProject = {
   code: string;
   name: string;
   description: string;
+  department?: string;
+  sponsor?: string;
+  profile?: Record<string, string>;
   category: string;
   type: string;
   source: string;
@@ -344,20 +347,23 @@ function seedProjects(tid: string): PProject[] {
   const pick = (l: string[], i: number) => l[i % Math.max(1, l.length)] ?? "—";
   const at = (s: string) => cfg.stages.find((x) => x.id === s)?.id ?? cfg.stages[0]?.id ?? "proposal";
   const dcaa = tid === "dcaa";
-  const rows: [string, string, number, ProjectStatus, number, Approval | null][] = dcaa
-    ? [
-        ["Heritage Site Digitisation", "execution", 84, "In progress", 2400000, null],
-        ["Al Shindagha Museum Expansion", "proposal", 100, "Pending approval", 18500000, { workflowId: "wf-standard-stage", stepIdx: 1 }],
-        ["Dubai Design Week 2026", "execution", 42, "In progress", 6200000, null],
-        ["Community Arts Grant Portal", "closure", 66, "In progress", 950000, null],
-        ["Hatta Cultural Trail", "proposal", 100, "In progress", 1300000, null],
-      ]
-    : [
-        ["King Salman Park Wayfinding", "execution", 81, "In progress", 3100000, null],
-        ["Diriyah Gate Utilities", "proposal", 100, "Pending approval", 42000000, { workflowId: "wf-standard-stage", stepIdx: 1 }],
-        ["Metro Line 7 Feasibility", "execution", 28, "In progress", 8800000, null],
-        ["Urban Greening Phase 2", "closure", 70, "In progress", 2600000, null],
-      ];
+  const initiation = cfg.stages.filter((s) => s.phaseId === "initiation");
+  const execution = cfg.stages.find((s) => s.config === "execution") ?? cfg.stages.find((s) => s.phaseId !== "initiation") ?? cfg.stages[0];
+  const proposalNames = dcaa
+    ? ["Al Shindagha Museum Expansion", "Hatta Cultural Trail", "Community Arts Grant Portal", "Heritage Archive Renewal", "Design District Residency", "Dubai Poetry Festival", "Creative Enterprise Fund", "Public Art Programme", "Museum Education Hub", "Culture Data Observatory", "Emirati Crafts Initiative", "Digital Collections Portal"]
+    : ["Diriyah Gate Utilities", "Metro Line 7 Feasibility", "Urban Greening Phase 3", "Smart Mobility Hub", "Community Park Renewal", "Civic Archive Project", "Public Realm Strategy", "Northern District Access", "City Data Observatory", "Sustainable Housing Pilot", "Waterfront Planning", "Urban Design Academy"];
+  const approvedNames = dcaa
+    ? ["Heritage Site Digitisation", "Dubai Design Week 2026", "Al Fahidi Conservation", "Cultural District Wayfinding", "Dubai Calligraphy Biennale", "Library Network Modernisation", "Museum Accessibility", "Creative Youth Programme", "Heritage Research Centre", "Al Shindagha Visitor Centre"]
+    : ["King Salman Park Wayfinding", "Urban Greening Phase 2", "Diriyah Infrastructure", "City Transit Integration", "Community Sports Network", "District Services Portal", "Riyadh Archive", "Regional Planning Centre", "Urban Analytics Platform", "Civic Accessibility"];
+  const rows: [string, string, number, ProjectStatus, number, Approval | null][] = [
+    ...proposalNames.map((name, i): [string, string, number, ProjectStatus, number, Approval | null] => {
+      const stage = initiation[i % Math.max(1, initiation.length)] ?? cfg.stages[0];
+      const wf = stage ? stageWorkflow(stage.id, false).wf : null;
+      const stepIdx = wf ? Math.min(firstApprovalStep(wf) + i % 3, wf.steps.length - 1) : 0;
+      return [name, stage?.id ?? "proposal", 100, i % 4 === 0 ? "In progress" : i % 4 === 3 ? "Returned" : "Pending approval", 950000 + i * 650000, i % 4 !== 0 && i % 4 !== 3 && wf ? { workflowId: wf.id, stepIdx } : null];
+    }),
+    ...approvedNames.map((name, i): [string, string, number, ProjectStatus, number, Approval | null] => [name, execution?.id ?? "execution", [84, 22, 76, 28, 92, 67, 18, 85, 100, 100][i] ?? 80, i > 7 ? "Completed" : "In progress", 2400000 + i * 800000, null]),
+  ];
   return rows.map(([name, stage, health, status, budget, approval], i) => {
     const category = pick(cats, i);
     const type = pick(types, i);
@@ -380,15 +386,17 @@ function seedProjects(tid: string): PProject[] {
       benefitType: pick(bens, i),
       entity: pick(ents, i),
       budget,
-      pm: i % 2 ? "Mariam Tarek" : "Saeed Al Mansoori",
+      pm: i % 3 === 0 ? "Youness Zahir" : i % 3 === 1 ? "Mariam Tarek" : "Saeed Al Mansoori",
+      department: pick(ents, i),
+      sponsor: "Project Sponsor",
       confidential: false,
       stageId,
       status,
       health,
       approval,
       tools,
-      createdAt: new Date(2026, 3 + i, 4 + i * 3).toISOString(),
-      history: [{ at: new Date(2026, 3 + i, 4 + i * 3).toISOString(), role: "Project Manager", text: "Project created" }],
+      createdAt: new Date(2026, i % 9, 4 + i % 20).toISOString(),
+      history: [{ at: new Date(2026, i % 9, 4 + i % 20).toISOString(), role: "Project Manager", text: "Project created" }],
     };
   });
 }
