@@ -1,5 +1,6 @@
 import { bcFinancialFields, initialAssessmentTypes } from "@/components/project-core/data";
 import type { Tool } from "@/components/project-core/toolkitData";
+import { CpButton } from './PreviewUI';
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -23,7 +24,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
       <div className="space-y-4">
         <div className="flex gap-2">
           {["Simplified", "Full"].map((l) => (
-            <button
+            <CpButton
               key={l}
               type="button"
               disabled={readOnly}
@@ -34,7 +35,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
               )}
             >
               {l} study
-            </button>
+            </CpButton>
           ))}
         </div>
         {types.map((t) => (
@@ -77,7 +78,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
       <div className="space-y-3">
         <div className="flex gap-2">
           {["Internal", "External"].map((l) => (
-            <button
+            <CpButton
               key={l}
               type="button"
               disabled={readOnly}
@@ -90,7 +91,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
               )}
             >
               {l}
-            </button>
+            </CpButton>
           ))}
         </div>
         <label className="block text-sm text-cp-text2">
@@ -177,7 +178,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
           ].map(([k, l]) => (
             <label key={k} className="block text-sm text-cp-text2">
               {l}
-              <input disabled={readOnly} type="number" className={input} value={data[k!] ?? ""} onChange={(e) => set(k!, e.target.value)} />
+              <input disabled={readOnly} type="number" className={input} value={data[k ?? ""] ?? ""} onChange={(e) => set(k ?? "", e.target.value)} />
             </label>
           ))}
         </div>

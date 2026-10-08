@@ -69,7 +69,9 @@ export function submitStage(tid: string, cfg: PreviewConfig, p: PProject, actor:
     return;
   }
   const stepIdx = firstApprovalStep(wf);
-  const approverRole = wf.steps[stepIdx]!.assigneeRole;
+  const first = wf.steps[stepIdx];
+  if (!first) return;
+  const approverRole = first.assigneeRole;
   patch(tid, p.id, (x) => ({
     ...x,
     status: "Pending approval",
@@ -91,11 +93,14 @@ export function actOnStage(
   const stage = cfg.stages.find((s) => s.id === p.stageId);
   const wf = mockWorkflows.find((w) => w.id === p.approval?.workflowId);
   if (!stage || !wf || !p.approval) return;
-  const step = wf.steps[p.approval.stepIdx]!;
+  const step = wf.steps[p.approval.stepIdx];
+  if (!step || step.assigneeRole !== actor) return;
   if (action === "approve") {
     const nextIdx = p.approval.stepIdx + 1;
     if (nextIdx < wf.steps.length) {
-      const nextRole = wf.steps[nextIdx]!.assigneeRole;
+      const nextStep = wf.steps[nextIdx];
+      if (!nextStep) return;
+      const nextRole = nextStep.assigneeRole;
       patch(tid, p.id, (x) => ({
         ...x,
         approval: { workflowId: wf.id, stepIdx: nextIdx },
@@ -109,7 +114,8 @@ export function actOnStage(
         history: [...x.history, { at: now(), role: actor, text: `Approved final step ${step.order} (${step.name})` }],
       }));
       toast.success(`${stage.label} fully approved`);
-      advance(tid, cfg, projectsStore.get(tid).find((x) => x.id === p.id)!, actor);
+      const updated = projectsStore.get(tid).find((x) => x.id === p.id);
+      if (updated) advance(tid, cfg, updated, actor);
     }
     return;
   }
@@ -131,8 +137,10 @@ export function updateTool(tid: string, pid: string, toolId: string, fn: (t: Att
 }
 
 export function submitTool(tid: string, cfg: PreviewConfig, p: PProject, att: AttachedTool, actor: string) {
-  const tool = cfg.tools.find((t) => t.id === att.toolId)!;
-  const stage = cfg.stages.find((s) => s.id === att.stageId) ?? cfg.stages[0]!;
+  const tool = cfg.tools.find((t) => t.id === att.toolId);
+  if (!tool) return;
+  const stage = cfg.stages.find((s) => s.id === att.stageId) ?? cfg.stages[0];
+  if (!stage) return;
   const wf = tool.requiresApproval ? mockWorkflows.find((w) => w.id === tool.workflowId && w.status === "Enabled") : undefined;
   if (!wf) {
     updateTool(tid, p.id, att.toolId, (t) => ({ ...t, status: "Completed" }));
@@ -154,14 +162,18 @@ export function actOnTool(
   action: "approve" | "return" | "reject",
   actor: string,
 ) {
-  const tool = cfg.tools.find((t) => t.id === att.toolId)!;
-  const stage = cfg.stages.find((s) => s.id === att.stageId) ?? cfg.stages[0]!;
+  const tool = cfg.tools.find((t) => t.id === att.toolId);
+  if (!tool) return;
+  const stage = cfg.stages.find((s) => s.id === att.stageId) ?? cfg.stages[0];
+  if (!stage) return;
   const wf = mockWorkflows.find((w) => w.id === att.approval?.workflowId);
-  if (!wf || !att.approval) return;
+  if (!wf || !att.approval || wf.steps[att.approval.stepIdx]?.assigneeRole !== actor) return;
   if (action === "approve") {
     const nextIdx = att.approval.stepIdx + 1;
     if (nextIdx < wf.steps.length) {
-      const role = wf.steps[nextIdx]!.assigneeRole;
+      const next = wf.steps[nextIdx];
+      if (!next) return;
+      const role = next.assigneeRole;
       updateTool(tid, p.id, att.toolId, (t) => ({ ...t, approval: { workflowId: wf.id, stepIdx: nextIdx } }));
       toast.success(`${tool.name}: next approver ${role}`);
       announce(fireEvent(tid, stage, "Submitted for approval", { project: p.name, actor, approverRole: role, prefix: tool.name }));
