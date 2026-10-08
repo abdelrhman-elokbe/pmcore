@@ -35,38 +35,6 @@ function BackLink() {
   );
 }
 
-function AddToolButton({ count }: { count: number }) {
-  return (
-          <button
-            type="button"
-            onClick={() => {
-              const id = `tool-${count + 1}`;
-              toolkitStore.add({
-                id,
-                name: "New tool",
-                nameAr: "أداة جديدة",
-                description: "Describe this tool.",
-                category: "Analysis",
-                icon: Wrench,
-                status: "Inactive",
-                config: "generic",
-                requiresApproval: false,
-                workflowId: null,
-                outputs: [],
-                allowedStages: [],
-                mode: "Optional",
-                mandatoryScope: { projectTypes: [], categories: [] },
-                defaultStage: null,
-              });
-              toast.success("Tool added — configure it to activate");
-            }}
-            className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-          >
-            <Plus className="size-4" /> Add tool
-          </button>
-  );
-}
-
 export function ToolkitList() {
   const tools = useTools();
   const [q, setQ] = useState("");
