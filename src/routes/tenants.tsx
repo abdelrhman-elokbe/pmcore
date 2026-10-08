@@ -22,6 +22,8 @@ export const Route = createFileRoute("/tenants")({
         property: "og:description",
         content: "Tenant registry, licence entitlements and the new-tenant onboarding wizard.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: TenantsPage,

@@ -13,6 +13,8 @@ export const Route = createFileRoute("/lookups")({
       },
       { property: "og:title", content: "Lookups & Terminology | Blackstone Product 2.0" },
       { property: "og:description", content: "Lookup lists and per-tenant terminology overrides." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => (

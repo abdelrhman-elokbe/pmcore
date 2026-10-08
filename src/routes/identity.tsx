@@ -34,6 +34,8 @@ export const Route = createFileRoute("/identity")({
         property: "og:description",
         content: "Users, roles, organization units, SSO and access audit in one place.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Identity,

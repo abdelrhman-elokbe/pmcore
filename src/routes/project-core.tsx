@@ -53,6 +53,8 @@ export const Route = createFileRoute("/project-core")({
         property: "og:description",
         content: "Configure Project Core stages, features, roles and client settings.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ProjectCoreAdmin,
