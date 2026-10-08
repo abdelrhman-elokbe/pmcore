@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { featuresStore, phasesStore, rolesStore, lookupsStore, brandingStore, proposalStore } from '@/components/project-core/configStores';
 import { toolkitStore } from '@/components/project-core/toolkitData';
 import { buildConfig, mandatoryTools, menuItems, projectsStore, notifStore, type PProject } from './engine';
