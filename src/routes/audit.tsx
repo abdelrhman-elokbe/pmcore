@@ -11,6 +11,8 @@ export const Route = createFileRoute("/audit")({
       },
       { property: "og:title", content: "Audit & Monitoring | Blackstone IT Platform" },
       { property: "og:description", content: "AAA audit trails and platform monitoring." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => (

@@ -12,6 +12,8 @@ export const Route = createFileRoute("/products")({
       },
       { property: "og:title", content: "Products | Blackstone IT Platform" },
       { property: "og:description", content: "Licensed platform products and entitlements." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Products,

@@ -13,6 +13,8 @@ export const Route = createFileRoute("/business-rules")({
       },
       { property: "og:title", content: "Business Rules | Blackstone Product 2.0" },
       { property: "og:description", content: "Turn hard-coded product logic into configuration." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => (

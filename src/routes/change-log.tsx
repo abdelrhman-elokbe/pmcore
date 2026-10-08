@@ -13,6 +13,8 @@ export const Route = createFileRoute("/change-log")({
       },
       { property: "og:title", content: "Change Log & Publishing | Blackstone Product 2.0" },
       { property: "og:description", content: "Configuration governance: review, publish, roll back." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => (

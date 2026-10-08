@@ -18,6 +18,8 @@ export const Route = createFileRoute("/tenant")({
         property: "og:description",
         content: "Everything configured for this client instance in one summary view.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: TenantOverview,
