@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Eye, Lock, Plus, Search, Wrench } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, Eye, Lock, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { availableWorkflows } from "./data";
 import { Field, SelectField, TextField, Toggle } from "./primitives";
@@ -35,38 +34,6 @@ function BackLink() {
   );
 }
 
-function AddToolButton({ count }: { count: number }) {
-  return (
-          <button
-            type="button"
-            onClick={() => {
-              const id = `tool-${count + 1}`;
-              toolkitStore.add({
-                id,
-                name: "New tool",
-                nameAr: "أداة جديدة",
-                description: "Describe this tool.",
-                category: "Analysis",
-                icon: Wrench,
-                status: "Inactive",
-                config: "generic",
-                requiresApproval: false,
-                workflowId: null,
-                outputs: [],
-                allowedStages: [],
-                mode: "Optional",
-                mandatoryScope: { projectTypes: [], categories: [] },
-                defaultStage: null,
-              });
-              toast.success("Tool added — configure it to activate");
-            }}
-            className="flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-          >
-            <Plus className="size-4" /> Add tool
-          </button>
-  );
-}
-
 export function ToolkitList() {
   const tools = useTools();
   const [q, setQ] = useState("");
@@ -82,7 +49,6 @@ export function ToolkitList() {
         >
           <Eye className="size-4" /> Project view (PM)
         </Link>
-        <AddToolButton count={tools.length} />
       </div>
       <div className="rounded-2xl border border-border bg-card shadow-card">
         <div className="flex items-center gap-3 border-b border-border p-4">
