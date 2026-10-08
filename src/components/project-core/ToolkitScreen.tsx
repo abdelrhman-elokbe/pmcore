@@ -82,7 +82,6 @@ export function ToolkitList() {
         >
           <Eye className="size-4" /> Project view (PM)
         </Link>
-        <AddToolButton count={tools.length} />
       </div>
       <div className="rounded-2xl border border-border bg-card shadow-card">
         <div className="flex items-center gap-3 border-b border-border p-4">
