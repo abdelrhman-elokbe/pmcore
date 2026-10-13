@@ -1,0 +1,1 @@
+- [Budget applicability](mem://features/budget-applicability) — Non-budgeted projects: tenant defaults, labels, reasons, templates
