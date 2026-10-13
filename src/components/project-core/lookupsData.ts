@@ -35,6 +35,7 @@ export type LookupCategoryId =
   | "external-entities"
   | "lessons-learned"
   | "health-score"
+  | "no-budget-reasons"
   | "fs-assessment-types";
 
 export const lookupCategories: { id: LookupCategoryId; label: string; singular: string }[] = [
@@ -45,6 +46,7 @@ export const lookupCategories: { id: LookupCategoryId; label: string; singular: 
   { id: "external-entities", label: "External Entities", singular: "Entity" },
   { id: "lessons-learned", label: "Lessons Learned Configuration", singular: "Category" },
   { id: "health-score", label: "Health Score Configuration", singular: "Band" },
+  { id: "no-budget-reasons", label: "No-Budget Reasons", singular: "Reason" },
   { id: "fs-assessment-types", label: "FS Assessment Types", singular: "Assessment Type" },
 ];
 
@@ -56,6 +58,7 @@ export type TenantLookups = {
   "lessons-learned": LookupItem[];
   "external-entities": ExternalEntity[];
   "health-score": HealthBand[];
+  "no-budget-reasons": LookupItem[];
 };
 
 const item = (
@@ -69,6 +72,13 @@ export const defaultHealthBands: HealthBand[] = [
   { id: 1, name: "Health Score < 31%", colour: "#FF6C6C", from: 0, to: 30 },
   { id: 2, name: "Health Score 31% – 50%", colour: "#E9A13B", from: 31, to: 50 },
   { id: 3, name: "Health Score > 50%", colour: "#58BD5C", from: 51, to: 100 },
+];
+
+const noBudgetReasons = (): LookupItem[] => [
+  item(1, "Operational", "Delivered within normal operations, no dedicated budget"),
+  item(2, "Non-financial", "No financial spend expected"),
+  item(3, "Externally funded", "Funded by a partner or external entity"),
+  item(4, "Covered by departmental budget", "Absorbed by an existing departmental budget"),
 ];
 
 const dcaa: TenantLookups = {
@@ -144,6 +154,7 @@ const dcaa: TenantLookups = {
     },
   ],
   "health-score": defaultHealthBands,
+  "no-budget-reasons": noBudgetReasons(),
 };
 
 const rda: TenantLookups = {
@@ -194,6 +205,7 @@ const rda: TenantLookups = {
     },
   ],
   "health-score": defaultHealthBands,
+  "no-budget-reasons": noBudgetReasons(),
 };
 
 export const companyTypes = [

@@ -24,6 +24,7 @@ const genericIds: LookupCategoryId[] = [
   "sources",
   "benefit-types",
   "lessons-learned",
+  "no-budget-reasons",
 ];
 
 function RowMenu({
@@ -181,6 +182,7 @@ export function LookupsScreen() {
       "external-entities": data["external-entities"].length,
       "lessons-learned": data["lessons-learned"].length,
       "health-score": data["health-score"].length,
+      "no-budget-reasons": data["no-budget-reasons"].length,
       "fs-assessment-types": 0,
     }),
     [data],

@@ -25,6 +25,8 @@ export type Tool = {
   /** Which built-in config panel to show (FS / BC carry over legacy stage settings). */
   config: "feasibility" | "businessCase" | "generic";
   requiresApproval: boolean;
+  /** Tool carries financial inputs; hidden for Not Budgeted projects. */
+  hasFinancialFields: boolean;
   workflowId: string | null;
   outputs: string[];
   allowedStages: string[];
@@ -60,6 +62,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "feasibility",
     requiresApproval: true,
+    hasFinancialFields: false,
     workflowId: "wf-standard-stage",
     outputs: ["FS report (PDF)", "Assessment scores"],
     allowedStages: ["initiation", "proposal"],
@@ -77,6 +80,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "businessCase",
     requiresApproval: true,
+    hasFinancialFields: true,
     workflowId: "wf-standard-stage",
     outputs: ["Business case document", "Financial model (XLSX)"],
     allowedStages: ["initiation", "proposal"],
@@ -94,6 +98,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: false,
     workflowId: null,
     outputs: ["SWOT matrix"],
     allowedStages: ["initiation", "proposal", "execution"],
@@ -111,6 +116,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: false,
     workflowId: null,
     outputs: ["RACI table"],
     allowedStages: ["execution-phase", "execution"],
@@ -128,6 +134,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: true,
     workflowId: null,
     outputs: ["ROI summary"],
     allowedStages: ["initiation", "benefits"],
@@ -145,6 +152,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: false,
     workflowId: null,
     outputs: ["Risk register"],
     allowedStages: ["initiation", "execution"],
@@ -162,6 +170,7 @@ const seed: Tool[] = [
     status: "Inactive",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: false,
     workflowId: null,
     outputs: ["Stakeholder map"],
     allowedStages: ["proposal"],
@@ -179,6 +188,7 @@ const seed: Tool[] = [
     status: "Active",
     config: "generic",
     requiresApproval: false,
+    hasFinancialFields: false,
     workflowId: null,
     outputs: ["CBA report"],
     allowedStages: ["initiation", "closure-phase", "benefits"],
