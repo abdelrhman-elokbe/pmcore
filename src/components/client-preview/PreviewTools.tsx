@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { can, projectsStore, type AttachedTool, type PProject, type PreviewConfig, type PreviewRole } from './engine';
 import { actOnTool, submitTool, updateTool } from './actions';
 import { ToolBody } from './ToolViews';
+import { isBudgeted } from './budget';
 import { Badge, CpButton } from './PreviewUI';
 const primaryBtn='cp-button-purple'; const outlineBtn='cp-button-outline';
 function Pill({tone,children}:{tone:string;children:React.ReactNode}) {return <span className={cn('cp-badge',tone)}>{children}</span>;}
@@ -110,6 +111,7 @@ export function ToolDrawer({
           data={att.data}
           readOnly={!editable}
           currency={cfg.tenant.currency}
+          notBudgeted={!isBudgeted(p)}
           set={(k, val) => updateTool(tenantId, p.id, toolId, (t) => ({ ...t, data: { ...t.data, [k]: val }, status: t.status === "Not started" ? "In progress" : t.status }))}
         />
         {step ? (
