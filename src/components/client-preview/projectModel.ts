@@ -44,7 +44,7 @@ export const BUDGET_REASON = 'NoBudgetReason';
 export function missingProposalFields(cfg: PreviewConfig, values: Record<string, string>, step?: number) {
   const asked = nonBudgetedAllowed(cfg, values['Type'] ?? '');
   const notBudgeted = asked && values[BUDGET_Q] === 'NotBudgeted';
-  const missing = proposalFields.filter((f) => cfg.proposal.required[f.key] && !(f.key === 'Budget' && notBudgeted) && (step === undefined || f.step === step) && !values[f.key]?.trim()).map((f) => f.label);
+  const missing: string[] = proposalFields.filter((f) => cfg.proposal.required[f.key] && !(f.key === 'Budget' && notBudgeted) && (step === undefined || f.step === step) && !values[f.key]?.trim()).map((f) => f.label);
   if (asked && (step === undefined || step === PLANNING_STEP)) {
     if (!values[BUDGET_Q]) missing.unshift('Does this project have a dedicated budget?');
     else if (notBudgeted && !values[BUDGET_REASON]) missing.push('Reason');
