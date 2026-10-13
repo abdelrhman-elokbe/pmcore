@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePlatform } from "@/lib/platform/context";
-import { proposalStore } from "./configStores";
+import { lookupsStore, proposalStore } from "./configStores";
 import { X } from "lucide-react";
 import {
   bcFinancialFields,
@@ -54,18 +54,27 @@ function ProposalConfig() {
   const setFields = (fn: (p: Record<string, boolean>) => Record<string, boolean>) =>
     setSettings((s) => ({ ...s, required: fn(s.required) }));
   const setConfidential = (v: boolean) => setSettings((s) => ({ ...s, confidential: v }));
+  const [lookups] = lookupsStore.use(tenantId);
+  const types = lookups.types.filter((t) => t.active).map((t) => t.name);
+  const limit = settings.nonBudgetedTypes;
   return (
     <div className="space-y-5">
       <div>
         <p className="mb-2 text-sm font-medium text-foreground">Required fields</p>
         <div className="space-y-2">
           {proposalRequiredFields.map((f) => (
-            <ToggleRow
-              key={f}
-              label={f}
-              checked={fields[f] ?? false}
-              onChange={(v) => setFields((p) => ({ ...p, [f]: v }))}
-            />
+            <div key={f}>
+              <ToggleRow
+                label={f}
+                checked={fields[f] ?? false}
+                onChange={(v) => setFields((p) => ({ ...p, [f]: v }))}
+              />
+              {f === "Budget" && settings.allowNonBudgeted ? (
+                <p className="mt-1 px-1 text-xs text-muted-foreground">
+                  Required only when the project has a dedicated budget
+                </p>
+              ) : null}
+            </div>
           ))}
         </div>
       </div>
@@ -76,6 +85,46 @@ function ProposalConfig() {
         onLabel="Yes"
         offLabel="No"
       />
+      <div className="space-y-2">
+        <ToggleRow
+          label="Allow non-budgeted projects"
+          checked={settings.allowNonBudgeted}
+          onChange={(v) => setSettings((s) => ({ ...s, allowNonBudgeted: v }))}
+          onLabel="On"
+          offLabel="Off"
+        />
+        {settings.allowNonBudgeted ? (
+          <div className="rounded-xl border border-border px-4 py-3">
+            <p className="text-sm text-foreground">Limit to project types</p>
+            <p className="mb-2 text-xs text-muted-foreground">None selected = all project types</p>
+            <div className="flex flex-wrap gap-2">
+              {types.map((t) => {
+                const on = limit.includes(t);
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() =>
+                      setSettings((s) => ({
+                        ...s,
+                        nonBudgetedTypes: on ? s.nonBudgetedTypes.filter((x) => x !== t) : [...s.nonBudgetedTypes, t],
+                      }))
+                    }
+                    className={
+                      on
+                        ? "rounded-full border border-primary bg-accent px-3 py-1 text-xs font-medium text-primary"
+                        : "rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                    }
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

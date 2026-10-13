@@ -9,14 +9,19 @@ type Props = {
   set: (k: string, v: string) => void;
   readOnly: boolean;
   currency: string;
+  notBudgeted?: boolean;
 };
+
+export const FINANCIAL_NA = "Financial section not applicable — project is Not Budgeted";
+const NaNote = () => <p className="rounded-lg bg-cp-orange-soft p-3 text-sm text-cp-text2" role="note">{FINANCIAL_NA}</p>;
 
 const input =
   "h-9 w-full rounded-lg border border-cp-border bg-cp-card px-3 text-sm text-cp-text outline-none focus:border-cp-purple disabled:bg-cp-bg";
 const area =
   "min-h-20 w-full rounded-lg border border-cp-border bg-cp-card p-3 text-sm text-cp-text outline-none focus:border-cp-purple disabled:bg-cp-bg";
 
-export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
+export function ToolBody({ tool, data, set, readOnly, currency, notBudgeted = false }: Props) {
+  const hideFinancial = notBudgeted && tool.hasFinancialFields;
   if (tool.config === "feasibility") {
     const level = data["level"] ?? "Simplified";
     const types = initialAssessmentTypes.filter((t) => t.active);
@@ -94,6 +99,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
             </CpButton>
           ))}
         </div>
+        {hideFinancial ? <NaNote /> : <>
         <label className="block text-sm text-cp-text2">
           Total investment ({currency})
           <input disabled={readOnly} className={input} value={data["investment"] ?? ""} onChange={(e) => set("investment", e.target.value)} />
@@ -106,6 +112,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
             </label>
           ))}
         </div>
+        </>}
         <label className="block text-sm text-cp-text2">
           Justification
           <textarea disabled={readOnly} className={area} value={data["justification"] ?? ""} onChange={(e) => set("justification", e.target.value)} />
@@ -164,6 +171,7 @@ export function ToolBody({ tool, data, set, readOnly, currency }: Props) {
       </table>
     );
   }
+  if (tool.id === "roi" && hideFinancial) return <NaNote />;
   if (tool.id === "roi") {
     const cost = Number(data["cost"] || 0);
     const benefit = Number(data["benefit"] || 0);

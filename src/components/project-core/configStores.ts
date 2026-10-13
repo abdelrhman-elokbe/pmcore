@@ -43,10 +43,19 @@ export const scopeRules = (
     inherit: isSub && getSeedRules(scopeId).length === 0,
   };
 
-export type ProposalSettings = { required: Record<string, boolean>; confidential: boolean };
-export const proposalStore = createTenantStore<ProposalSettings>(() => ({
+export type ProposalSettings = {
+  required: Record<string, boolean>;
+  confidential: boolean;
+  /** Proposal stage: allow projects without a dedicated budget. */
+  allowNonBudgeted: boolean;
+  /** Empty = all project types. */
+  nonBudgetedTypes: string[];
+};
+export const proposalStore = createTenantStore<ProposalSettings>((tid) => ({
   required: Object.fromEntries(proposalRequiredFields.map((f) => [f, true])),
   confidential: true,
+  allowNonBudgeted: tid === "rda",
+  nonBudgetedTypes: [],
 }));
 
 export type BrandingSettings = {

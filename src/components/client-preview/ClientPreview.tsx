@@ -13,6 +13,7 @@ import { ProjectDetail } from './ProjectDetail';
 import { ProposalWizard } from './ProposalWizard';
 import { ToolDrawer } from './PreviewTools';
 import { isProposal } from './projectModel';
+import { budgetLabel, isBudgeted, nonBudgetedAllowed, projectCsvRows } from './budget';
 
 const menuIcons = { dashboard: ChartLine, proposals: Folder, projects: LayoutGrid, 'pmo-dashboards': LayoutDashboard, 'pmo-reports': FileBarChart, 'change-requests': SlidersHorizontal, 'closure-requests': SquareX, lessons: Lightbulb, configurations: Settings };
 export function ClientPreview({ from }: { from: string }) {
@@ -45,7 +46,7 @@ function OtherScreen({id,cfg,role,projects,configItem}:{id:MenuId;cfg:PreviewCon
  const [tab,setTab]=useState('Portfolio Overview');const title=id==='configurations'?`Configurations · ${configItem}`:menuItems(cfg,role).find((m)=>m.id===id)?.label ?? '';
  const pmoTabs=[['Portfolio Overview','Portfolio Summary KPIs'],['Progress','Project Progress'],['Risks','Risk Management'],['Budget','Budget Management'],['Benefits Realization','Benefits Realization'],['Deliverables Management','Deliverables Management'],['Project Health Score','Project Health Score']].filter(([,f])=>featureOn(cfg.features,'dashboard',f));
  const rows=id==='lessons'?cfg.lookups['lessons-learned'].filter((x)=>x.active).map((x)=>x.name):id==='configurations'?cfg.lookups.categories.filter((x)=>x.active).map((x)=>x.name):projects.filter((p)=>id==='closure-requests'?p.stageId==='closure':id==='change-requests'?p.status==='Returned':true).slice(0,6).map((p)=>p.name);
- return <div className="cp-page"><div className="cp-page-title"><h1>{title}</h1></div>{id==='pmo-dashboards'&&<><div className="cp-filter"><label>Classification<select><option>All</option>{cfg.lookups.categories.filter((x)=>x.active).map((x)=><option key={x.id}>{x.name}</option>)}</select></label><label>Year<select><option>2026</option></select></label></div><div className="cp-tabs">{pmoTabs.map(([name])=><CpButton key={name} className={tab===name?'cp-tab-active':''} onClick={()=>setTab(name ?? 'Portfolio Overview')}>{name}</CpButton>)}</div><div className="cp-kpis">{['Total Projects','On Track','Under Review','Closed'].map((label,i)=><div className="cp-placeholder-kpi" key={label}><strong>{[projects.length,projects.filter((p)=>p.health>50&&!p.approval).length,projects.filter((p)=>p.approval).length,projects.filter((p)=>p.status==='Completed').length][i]}</strong><span>{label}</span></div>)}</div></>}<Section title={id==='pmo-dashboards'?tab:title}><table className="cp-simple-table"><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>{rows.map((name)=><tr key={name}><td>{name}</td><td><Badge>Active</Badge></td></tr>)}</tbody></table>{!rows.length&&<div className="cp-empty">No records.</div>}</Section></div>;
+ return <div className="cp-page"><div className="cp-page-title"><h1>{title}</h1></div>{id==='pmo-dashboards'&&<><div className="cp-filter"><label>Classification<select><option>All</option>{cfg.lookups.categories.filter((x)=>x.active).map((x)=><option key={x.id}>{x.name}</option>)}</select></label><label>Year<select><option>2026</option></select></label></div><div className="cp-tabs">{pmoTabs.map(([name])=><CpButton key={name} className={tab===name?'cp-tab-active':''} onClick={()=>setTab(name ?? 'Portfolio Overview')}>{name}</CpButton>)}</div><div className="cp-kpis">{['Total Projects','On Track','Under Review','Closed'].map((label,i)=><div className="cp-placeholder-kpi" key={label}><strong>{[projects.length,projects.filter((p)=>p.health>50&&!p.approval).length,projects.filter((p)=>p.approval).length,projects.filter((p)=>p.status==='Completed').length][i]}</strong><span>{label}</span></div>)}</div></>}{id==='pmo-reports'?<Section title="Project Report" exportable={can(role,'Projects','Export')} csv={{name:'PMO-Report.csv',rows:()=>projectCsvRows(cfg,projects)}}><table className="cp-simple-table"><thead><tr><th>Project</th><th>Type</th><th>Budget</th><th>Status</th></tr></thead><tbody>{projects.map((p)=><tr key={p.id}><td>{p.name}</td><td>{p.type}</td><td>{budgetLabel(p,cfg)}{!isBudgeted(p)&&p.noBudgetReason?` · ${p.noBudgetReason}`:''}</td><td><Badge>{p.status}</Badge></td></tr>)}</tbody></table></Section>:<Section title={id==='pmo-dashboards'?tab:title}><table className="cp-simple-table"><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>{rows.map((name)=><tr key={name}><td>{name}</td><td><Badge>Active</Badge></td></tr>)}</tbody></table>{!rows.length&&<div className="cp-empty">No records.</div>}</Section>}</div>;
 }
 function AdminLinkEl({ link }: { link: AdminLink }) {
   return (
@@ -70,6 +71,9 @@ function buildTrace(
   const out: TraceLine[] = [];
   out.push({ kind: "info", text: `Lifecycle: ${cfg.stages.map((s) => s.label).join(" → ") || "none"}`, link: { screen: "stages" } });
   cfg.disabledStages.forEach((s) => out.push({ kind: "hidden", text: `${s.name} hidden — stage disabled`, link: { screen: "stages" } }));
+  out.push(cfg.proposal.allowNonBudgeted
+    ? { kind: "info", text: `Budget question shown — non-budgeted projects allowed for this tenant (Stages → Proposal)${cfg.proposal.nonBudgetedTypes.length ? ` · types: ${cfg.proposal.nonBudgetedTypes.join(", ")}` : ""}`, link: { screen: "stages" } }
+    : { kind: "hidden", text: "Budget question hidden — non-budgeted projects not allowed (Stages → Proposal); Budget follows required-field config", link: { screen: "stages" } });
   if (cfg.intake !== "Proposal") out.push({ kind: "info", text: `Terminology: "Proposal" shown as "${cfg.intake}"` });
   menu.filter((m) => !m.visible).forEach((m) => out.push({ kind: "hidden", text: `${m.label} hidden — ${m.reason}`, link: m.link }));
   const f = cfg.features;
@@ -90,6 +94,13 @@ function buildTrace(
       );
   });
   if (p) {
+    if (!isBudgeted(p) && p.budgetApplicability === "NotBudgeted") {
+      const why = p.noBudgetReason ? ` (${p.noBudgetReason})` : "";
+      out.push({ kind: "hidden", text: `Cost tab hidden — project declared Not Budgeted${why}`, link: { screen: "stages" } });
+      out.push({ kind: "hidden", text: "Cost Management section hidden — Not Budgeted", link: { screen: "stages" } });
+      p.tools.forEach((t) => { const tool = cfg.tools.find((x) => x.id === t.toolId); if (tool?.hasFinancialFields) out.push({ kind: "hidden", text: `${tool.name} financial section hidden — Not Budgeted`, link: { screen: "toolkit", tool: tool.id } }); });
+      if (!nonBudgetedAllowed(cfg, p.type)) out.push({ kind: "warn", text: "Project is Not Budgeted but the tenant no longer allows it for this type", link: { screen: "stages" } });
+    }
     p.tools.forEach((t) => {
       const tool = cfg.tools.find((x) => x.id === t.toolId);
       out.push({ kind: "ok", text: `${tool?.name}: ${t.reason}`, link: { screen: "toolkit", tool: t.toolId } });

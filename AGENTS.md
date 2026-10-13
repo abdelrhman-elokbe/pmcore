@@ -17,3 +17,4 @@
 - Client preview screen modules share an enabled-lifecycle classification helper to distinguish initiation proposals from approved projects, so menu counts and approval transitions stay consistent when stages change.
 
 - Client preview configuration rules use Vitest with a standalone browser-safe alias configuration, so tests do not load the application server bootstrap.
+- Budget applicability lives in `client-preview/budget.ts` (`isBudgeted`, `budgetLabel`, `financials`, CSV export); every budget display, financial aggregate and export goes through it so Not Budgeted projects never render as 0.

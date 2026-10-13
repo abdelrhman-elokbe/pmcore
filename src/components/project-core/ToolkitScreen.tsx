@@ -272,6 +272,14 @@ export function ToolDetail({ toolId }: { toolId: string }) {
           )}
         </Card>
 
+        <Card title="Financial fields">
+          <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
+            <span className="text-sm text-foreground">Has financial fields</span>
+            <Toggle checked={tool.hasFinancialFields} onChange={(v) => set({ hasFinancialFields: v })} label="Has financial fields" />
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">Financial inputs are hidden for Not Budgeted projects; the tool stays attached.</p>
+        </Card>
+
         <Card title="Approval">
           <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
             <span className="text-sm text-foreground">Requires approval</span>

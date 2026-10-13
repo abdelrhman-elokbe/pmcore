@@ -254,6 +254,10 @@ export type AttachedTool = {
 
 export type ProjectStatus = "In progress" | "Pending approval" | "Returned" | "Rejected" | "Completed";
 
+export type BudgetApplicability = "Budgeted" | "NotBudgeted" | null;
+export type ProjectPhase = { id: string; name: string; start: string; end: string; budget?: number | null };
+export type ChangeRequest = { id: string; title: string; reason: string; scheduleDays: number; costImpact: number | null; status: string; at: string };
+
 export type PProject = {
   id: string;
   code: string;
@@ -267,7 +271,14 @@ export type PProject = {
   source: string;
   benefitType: string;
   entity: string;
-  budget: number;
+  /** null only while a draft has not answered the budget question. */
+  budgetApplicability: BudgetApplicability;
+  /** No-Budget Reasons lookup name, set when NotBudgeted. */
+  noBudgetReason?: string;
+  /** null when NotBudgeted — never 0. */
+  budget: number | null;
+  phases: ProjectPhase[];
+  changeRequests?: ChangeRequest[];
   pm: string;
   confidential: boolean;
   stageId: string;
@@ -364,7 +375,15 @@ function seedProjects(tid: string): PProject[] {
     }),
     ...approvedNames.map((name, i): [string, string, number, ProjectStatus, number, Approval | null] => [name, execution?.id ?? "execution", [84, 22, 76, 28, 92, 67, 18, 85, 100, 100][i] ?? 80, i > 7 ? "Completed" : "In progress", 2400000 + i * 800000, null]),
   ];
-  return rows.map(([name, stage, health, status, budget, approval], i) => {
+  const reasons = names(cfg.lookups["no-budget-reasons"]);
+  // proposals #3 and #8, approved project #4 are declared Not Budgeted
+  const notBudgeted: Record<number, string> = { 2: reasons[0] ?? "Operational", 7: reasons[1] ?? "Non-financial", 15: reasons[0] ?? "Operational" };
+  return rows.map(([name, stage, health, status, rawBudget, approval], i) => {
+    const reason = notBudgeted[i];
+    const budget = reason ? null : rawBudget;
+    const start = new Date(2026, i % 9, 4 + (i % 20));
+    const tpl = i % 2 === 0 ? phaseTemplates[0]! : phaseTemplates[1]!;
+    const phases = buildPhases(tpl, start.toISOString().slice(0, 10), budget, `s${i}`);
     const category = pick(cats, i);
     const type = pick(types, i);
     const stageId = at(stage);
@@ -386,6 +405,9 @@ function seedProjects(tid: string): PProject[] {
       benefitType: pick(bens, i),
       entity: pick(ents, i),
       budget,
+      budgetApplicability: reason ? "NotBudgeted" : "Budgeted",
+      ...(reason ? { noBudgetReason: reason } : {}),
+      phases,
       pm: i % 3 === 0 ? "Youness Zahir" : i % 3 === 1 ? "Mariam Tarek" : "Saeed Al Mansoori",
       department: pick(ents, i),
       sponsor: "Project Sponsor",
@@ -398,6 +420,26 @@ function seedProjects(tid: string): PProject[] {
       createdAt: new Date(2026, i % 9, 4 + i % 20).toISOString(),
       history: [{ at: new Date(2026, i % 9, 4 + i % 20).toISOString(), role: "Project Manager", text: "Project created" }],
     };
+  });
+}
+
+/* ---------------- Phase templates ---------------- */
+
+export type PhaseTemplate = { id: string; label: string; phases: { name: string; share: number; days: number }[] };
+export const phaseTemplates: PhaseTemplate[] = [
+  { id: "standard", label: "Standard delivery", phases: [{ name: "Planning", share: 0.15, days: 30 }, { name: "Design", share: 0.25, days: 45 }, { name: "Build", share: 0.45, days: 90 }, { name: "Handover", share: 0.15, days: 30 }] },
+  { id: "operational", label: "Operational", phases: [{ name: "Mobilise", share: 0.2, days: 30 }, { name: "Run", share: 0.6, days: 120 }, { name: "Review", share: 0.2, days: 30 }] },
+];
+
+/** Creates phases from a template; budget split applies only when a project budget is given. */
+export function buildPhases(tpl: PhaseTemplate, startIso: string, budget: number | null, prefix = "ph"): ProjectPhase[] {
+  let cursor = new Date(startIso || new Date().toISOString().slice(0, 10));
+  return tpl.phases.map((ph, i) => {
+    const start = cursor.toISOString().slice(0, 10);
+    const endD = new Date(cursor.getTime() + ph.days * 86400000);
+    cursor = new Date(endD.getTime() + 86400000);
+    const base = { id: `${prefix}-${i + 1}`, name: ph.name, start, end: endD.toISOString().slice(0, 10) };
+    return budget === null ? base : { ...base, budget: Math.round(budget * ph.share) };
   });
 }
 
