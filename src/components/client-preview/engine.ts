@@ -256,7 +256,7 @@ export type ProjectStatus = "In progress" | "Pending approval" | "Returned" | "R
 
 export type BudgetApplicability = "Budgeted" | "NotBudgeted" | null;
 export type ProjectPhase = { id: string; name: string; start: string; end: string; budget?: number | null };
-export type ChangeRequest = { id: string; title: string; reason: string; scheduleDays: number; costImpact: number | null; status: string; at: string };
+export type ChangeRequest = { id: string; title: string; reason: string; scheduleDays: number; costImpact: number | null; status: string; at: string; newCurrency?: string };
 
 export type PProject = {
   id: string;
@@ -277,6 +277,8 @@ export type PProject = {
   noBudgetReason?: string;
   /** null when NotBudgeted — never 0. */
   budget: number | null;
+  /** Project currency; absent = tenant main currency. */
+  currency?: string;
   phases: ProjectPhase[];
   changeRequests?: ChangeRequest[];
   pm: string;
@@ -407,6 +409,7 @@ function seedProjects(tid: string): PProject[] {
       budget,
       budgetApplicability: reason ? "NotBudgeted" : "Budgeted",
       ...(reason ? { noBudgetReason: reason } : {}),
+      ...(reason ? {} : i === 4 ? { currency: "USD" } : i === 13 ? { currency: "EUR" } : i === 18 ? { currency: "USD" } : {}),
       phases,
       pm: i % 3 === 0 ? "Youness Zahir" : i % 3 === 1 ? "Mariam Tarek" : "Saeed Al Mansoori",
       department: pick(ents, i),
