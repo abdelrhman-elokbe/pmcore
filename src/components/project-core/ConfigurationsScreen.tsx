@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { usePlatform } from "@/lib/platform/context";
 import { brandingStore } from "./configStores";
 import { Palette, Globe2, Network, Activity, KeyRound } from "lucide-react";
+import { CURRENCIES, RATES_TO_AED } from "@/components/client-preview/currency";
 import { Field, SelectField, TextField, SectionHeader } from "./primitives";
 
 export function ConfigurationsScreen() {
@@ -30,6 +31,12 @@ export function ConfigurationsScreen() {
           <Field label="Number format">
             <SelectField value={b.numberFormat} onChange={(e) => setB((p) => ({ ...p, numberFormat: e.target.value }))} options={["1,234.56", "1.234,56", "1 234.56"]} />
           </Field>
+        </div>
+        <p className="mt-4 text-xs font-semibold text-muted-foreground">Project currencies (fixed list · read-only rates, 1 unit = AED)</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {CURRENCIES.map((c) => (
+            <span key={c} className="rounded-xl border border-border px-3 py-1.5 text-sm">{c} · {RATES_TO_AED[c]}</span>
+          ))}
         </div>
       </section>
 

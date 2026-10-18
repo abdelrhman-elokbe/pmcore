@@ -1,3 +1,4 @@
+import { projectCurrency } from './currency';
 import { Lock, X } from 'lucide-react';
 import { mockWorkflows } from '@/components/project-core/data';
 import type { Tool } from '@/components/project-core/toolkitData';
@@ -110,7 +111,7 @@ export function ToolDrawer({
           tool={tool}
           data={att.data}
           readOnly={!editable}
-          currency={cfg.tenant.currency}
+          currency={projectCurrency(p, cfg)}
           notBudgeted={!isBudgeted(p)}
           set={(k, val) => updateTool(tenantId, p.id, toolId, (t) => ({ ...t, data: { ...t.data, [k]: val }, status: t.status === "Not started" ? "In progress" : t.status }))}
         />

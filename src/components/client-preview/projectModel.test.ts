@@ -4,7 +4,8 @@ import { toolkitStore } from '@/components/project-core/toolkitData';
 import { buildConfig, mandatoryTools, menuItems, projectsStore, notifStore, type PProject } from './engine';
 import { isProposal, missingProposalFields, stageTabs } from './projectModel';
 import { actOnStage, createProject, submitStage } from './actions';
-import { budgetLabel, clearBudget, financials, isBudgeted, nonBudgetedAllowed, phaseBudgetError } from './budget';
+import { approveChangeRequest, convert } from './currency';
+import { budgetLabel, projectCsvRows, clearBudget, financials, isBudgeted, nonBudgetedAllowed, phaseBudgetError } from './budget';
 function config(tid:string) {
  return buildConfig(tid,{phases:phasesStore.get(tid),features:featuresStore.get(tid),roles:rolesStore.get(tid),lookups:lookupsStore.get(tid),branding:brandingStore.get(tid),proposal:proposalStore.get(tid),tools:toolkitStore.get()});
 }
@@ -84,5 +85,19 @@ describe('configuration-driven client Projects',()=>{
   expect(missingProposalFields(cfg,{...base,BudgetApplicability:'NotBudgeted'},2)).toEqual(['Reason']);
   expect(missingProposalFields(cfg,{...base,BudgetApplicability:'Budgeted'},2)).toEqual(['Project Budget']);
   expect(missingProposalFields(config('dcaa'),{Type:'Event Management'},2)).toEqual(['Project Budget']);
+ });
+ test('currency conversion uses built-in rates to AED',()=>{
+  expect(convert(1000,'USD','AED')).toBe(3673);expect(convert(1000,'AED','AED')).toBe(1000);expect(convert(3672.5,'AED','USD')).toBe(1000);
+ });
+ test('budget label uses project currency; totals convert to tenant currency',()=>{
+  const cfg=config('dcaa');const a={budgetApplicability:'Budgeted' as const,budget:1000,currency:'USD'};
+  expect(budgetLabel(a,cfg)).toBe('USD 1,000');
+  const rows=[{...projectsStore.get('cur-test')[0]!,budget:1000,currency:'USD',budgetApplicability:'Budgeted' as const},{...projectsStore.get('cur-test')[1]!,budget:500,budgetApplicability:'Budgeted' as const}];
+  const fin=financials(rows,cfg);expect(fin.total).toBe(3673+500);expect(fin.converted).toBe(true);
+  const csv=projectCsvRows(cfg,rows);expect(csv[0]).toContain('Currency');expect(csv[1]).toContain('USD');expect(csv[1]).toContain(3673);
+ });
+ test('currency changes only when a change request with a new currency is approved',()=>{
+  const p={...projectsStore.get('cr-cur')[0]!,changeRequests:[{id:'c1',title:'t',reason:'',scheduleDays:0,costImpact:null,status:'Submitted',at:'',newCurrency:'EUR'}]};
+  expect(p.currency).toBeUndefined();const out=approveChangeRequest(p,'c1');expect(out.currency).toBe('EUR');expect(out.budget).toBe(p.budget);expect(out.changeRequests?.[0]?.status).toBe('Approved');
  });
 });

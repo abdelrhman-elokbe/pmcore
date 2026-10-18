@@ -101,6 +101,7 @@ function buildTrace(
       p.tools.forEach((t) => { const tool = cfg.tools.find((x) => x.id === t.toolId); if (tool?.hasFinancialFields) out.push({ kind: "hidden", text: `${tool.name} financial section hidden — Not Budgeted`, link: { screen: "toolkit", tool: tool.id } }); });
       if (!nonBudgetedAllowed(cfg, p.type)) out.push({ kind: "warn", text: "Project is Not Budgeted but the tenant no longer allows it for this type", link: { screen: "stages" } });
     }
+    if (p.currency && p.currency !== cfg.tenant.currency && p.budgetApplicability !== "NotBudgeted") out.push({ kind: "info", text: `Budget shown in ${p.currency}, converted to ${cfg.tenant.currency} for totals`, link: { screen: "configurations" } });
     p.tools.forEach((t) => {
       const tool = cfg.tools.find((x) => x.id === t.toolId);
       out.push({ kind: "ok", text: `${tool?.name}: ${t.reason}`, link: { screen: "toolkit", tool: t.toolId } });

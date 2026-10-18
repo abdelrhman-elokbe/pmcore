@@ -18,3 +18,4 @@
 
 - Client preview configuration rules use Vitest with a standalone browser-safe alias configuration, so tests do not load the application server bootstrap.
 - Budget applicability lives in `client-preview/budget.ts` (`isBudgeted`, `budgetLabel`, `financials`, CSV export); every budget display, financial aggregate and export goes through it so Not Budgeted projects never render as 0.
+- Project currency helpers live in `client-preview/currency.ts` (fixed list + built-in rates); all money totals convert to the tenant main currency through it, and a project's currency changes only via an approved change request.
