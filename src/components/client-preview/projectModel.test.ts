@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { featuresStore, phasesStore, rolesStore, lookupsStore, brandingStore, proposalStore } from '@/components/project-core/configStores';
 import { toolkitStore } from '@/components/project-core/toolkitData';
 import { buildConfig, mandatoryTools, menuItems, projectsStore, notifStore, type PProject } from './engine';
-import { isProposal, missingProposalFields, stageTabs } from './projectModel';
+import { isProposal, missingProposalFields, stageTabs, stageToolTabs } from './projectModel';
 import { actOnStage, createProject, submitStage } from './actions';
 import { approveChangeRequest, convert } from './currency';
 import { budgetLabel, projectCsvRows, clearBudget, financials, isBudgeted, nonBudgetedAllowed, phaseBudgetError } from './budget';
@@ -17,7 +17,7 @@ describe('configuration-driven client Projects',()=>{
  test('Change requests off hides both the menu and execution tab',()=>{
   const cfg=config('feature-test');cfg.features={...cfg.features,enabled:{...cfg.features.enabled,cr:false}};
   const role=cfg.roles.find((r)=>r.id==='pm');if(!role)throw Error('Missing PM role');
-  expect(menuItems(cfg,role).find((m)=>m.id==='change-requests')?.visible).toBe(false);expect(stageTabs(cfg,false)).not.toContain('Change Requests');
+  expect(menuItems(cfg,role).find((m)=>m.id==='change-requests')?.visible).toBe(false);expect(stageTabs(cfg)).not.toContain('Change Requests');
  });
  test('disabled lifecycle stages are omitted and proposal classification follows enabled stages',()=>{
   const cfg=config('stage-test');const altered=buildConfig('stage-test',{phases:cfg.phases.map((ph)=>({...ph,stages:ph.stages.map((s)=>({...s,enabled:s.id!=='closure'&&s.enabled}))})),features:cfg.features,roles:rolesStore.get('stage-test'),lookups:cfg.lookups,branding:cfg.branding,proposal:cfg.proposal,tools:cfg.tools});
@@ -76,8 +76,15 @@ describe('configuration-driven client Projects',()=>{
  });
  test('Not Budgeted project hides Cost tab; budgeted keeps it',()=>{
   const cfg=config('tabs-test');
-  expect(stageTabs(cfg,false,{budgetApplicability:'NotBudgeted',budget:null})).not.toContain('Cost');
-  expect(stageTabs(cfg,false,{budgetApplicability:'Budgeted',budget:10})).toContain('Cost');
+  expect(stageTabs(cfg,{budgetApplicability:'NotBudgeted',budget:null})).not.toContain('Cost');
+  expect(stageTabs(cfg,{budgetApplicability:'Budgeted',budget:10})).toContain('Cost');
+ });
+ test('each attached tool has a separate named tab and removing it removes only its tab',()=>{
+  const cfg=config('tool-tabs');
+  const items=['swot','raci'].map((toolId)=>({toolId,stageId:'execution',locked:false,status:'Not started' as const,reason:'Optional',data:{},approval:null}));
+  expect(stageToolTabs(cfg,items).map(({id,label})=>({id,label}))).toEqual([{id:'tool:swot',label:'SWOT Analysis'},{id:'tool:raci',label:'RACI Matrix'}]);
+  expect(stageToolTabs(cfg,items.filter((t)=>t.toolId!=='swot')).map((t)=>t.id)).toEqual(['tool:raci']);
+  expect(stageTabs(cfg)).not.toContain('Toolkit');
  });
  test('Not Budgeted requires a reason instead of the budget in Project Planning',()=>{
   const cfg=config('rda');const base={'Type':'Digital Transformation'};

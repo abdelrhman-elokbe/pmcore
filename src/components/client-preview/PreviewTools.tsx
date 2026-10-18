@@ -83,6 +83,24 @@ export function ToolDrawer({
   role: PreviewRole;
   close: () => void;
 }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex justify-end bg-cp-text/30" onClick={close}>
+      <div className="h-full w-full max-w-2xl overflow-y-auto bg-cp-card p-6 font-cp" onClick={(e) => e.stopPropagation()}>
+        <ToolPanel cfg={cfg} tenantId={tenantId} p={p} toolId={toolId} role={role} close={close} />
+      </div>
+    </div>
+  );
+}
+
+export function ToolPanel({ cfg, tenantId, p, toolId, role, close, remove }: {
+  cfg: PreviewConfig;
+  tenantId: string;
+  p: PProject;
+  toolId: string;
+  role: PreviewRole;
+  close?: () => void;
+  remove?: () => void;
+}) {
   const att = p.tools.find((t) => t.toolId === toolId);
   const tool: Tool | undefined = cfg.tools.find((t) => t.id === toolId);
   if (!att || !tool) return null;
@@ -92,8 +110,7 @@ export function ToolDrawer({
   const step = wf && att.approval ? wf.steps[att.approval.stepIdx] : undefined;
   const myTurn = step?.assigneeRole === role.name;
   return (
-    <div className="fixed inset-0 z-[60] flex justify-end bg-cp-text/30" onClick={close}>
-      <div className="h-full w-full max-w-2xl overflow-y-auto bg-cp-card p-6 font-cp" onClick={(e) => e.stopPropagation()}>
+    <div>
         <div className="mb-4 flex items-start gap-3">
           <div className="flex-1">
             <p className="flex items-center gap-2 text-lg font-semibold">
@@ -105,7 +122,8 @@ export function ToolDrawer({
             </p>
           </div>
           <Pill tone={toolTone[att.status] ?? ""}>{att.status}</Pill>
-          <CpButton type="button" onClick={close} aria-label="Close tool"><X className="size-5 text-cp-muted" /></CpButton>
+           {isPM && !att.locked && remove ? <CpButton type="button" onClick={remove} aria-label={`Remove ${tool.name}`} title={`Remove ${tool.name}`}><X className="size-4 text-cp-muted" /></CpButton> : null}
+           {close ? <CpButton type="button" onClick={close} aria-label="Close tool"><X className="size-5 text-cp-muted" /></CpButton> : null}
         </div>
         <ToolBody
           tool={tool}
@@ -133,7 +151,6 @@ export function ToolDrawer({
             </CpButton>
           </div>
         ) : null}
-      </div>
     </div>
   );
 }
