@@ -1,4 +1,4 @@
-import { featureOn, type PProject, type PreviewConfig } from './engine';
+import { featureOn, type AttachedTool, type PProject, type PreviewConfig } from './engine';
 import { isBudgeted, nonBudgetedAllowed } from './budget';
 
 /** The execution boundary follows enabled stages, never a hard-coded proposal id. */
@@ -12,8 +12,14 @@ export function isProposal(cfg: PreviewConfig, p: PProject) {
   if (index < 0) return cfg.disabledStages.some((s) => s.id === p.stageId && s.phaseId === 'initiation');
   return boundary < 0 ? cfg.stages[index]?.phaseId === 'initiation' : index < boundary;
 }
-export function stageTabs(cfg: PreviewConfig, hasTools: boolean, p?: Pick<PProject, 'budgetApplicability' | 'budget'>) {
-  return ['Dashboard', 'Charter', 'Schedule', 'Deliverables', 'Cost', 'Risks', 'Benefits', 'Documents', 'Comments', 'Change Requests', ...(hasTools ? ['Toolkit'] : [])].filter((tab) => {
+export function stageToolTabs(cfg: PreviewConfig, items: AttachedTool[]) {
+  return items.flatMap((item) => {
+    const tool = cfg.tools.find((tool) => tool.id === item.toolId);
+    return tool ? [{ id: `tool:${tool.id}`, label: tool.name, toolId: tool.id, icon: tool.icon }] : [];
+  });
+}
+export function stageTabs(cfg: PreviewConfig, p?: Pick<PProject, 'budgetApplicability' | 'budget'>) {
+  return ['Dashboard', 'Charter', 'Schedule', 'Deliverables', 'Cost', 'Risks', 'Benefits', 'Documents', 'Comments', 'Change Requests'].filter((tab) => {
     if (tab === 'Cost') return !p || isBudgeted(p);
     if (tab === 'Change Requests') return featureOn(cfg.features, 'cr');
     if (tab === 'Risks') return featureOn(cfg.features, 'project', 'Risk management');
