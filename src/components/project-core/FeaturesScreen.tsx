@@ -19,7 +19,7 @@ export function FeaturesScreen() {
   const [q, setQ] = useState("");
   const ql = q.trim().toLowerCase();
   const matches = (s: FeatureSection) =>
-    !ql || s.name.toLowerCase().includes(ql) || s.items.some((it) => it.name.toLowerCase().includes(ql));
+    !ql || s.title.toLowerCase().includes(ql) || s.items.some((it) => it.name.toLowerCase().includes(ql));
 
   const toggleItem = (sid: string, idx: number, v: boolean) =>
     setSections((prev) =>
@@ -85,7 +85,7 @@ export function FeaturesScreen() {
 
             {expanded && (
               <div className="grid gap-2 border-t border-border p-4 md:grid-cols-2">
-                {section.items.map((item, i) => (!ql || section.name.toLowerCase().includes(ql) || item.name.toLowerCase().includes(ql)) && (
+                {section.items.map((item, i) => (!ql || section.title.toLowerCase().includes(ql) || item.name.toLowerCase().includes(ql)) && (
                   <div
                     key={item.name}
                     role="button"
