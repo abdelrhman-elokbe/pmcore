@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, CheckCircle2, CircleDot, MoreVertical, Plus, LayoutDashboard, FileText, CalendarDays, PackageCheck, Wallet, ShieldAlert, TrendingUp, MessageSquare, SlidersHorizontal, Wrench, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, CircleDot, MoreVertical, Plus, Search, LayoutDashboard, FileText, CalendarDays, PackageCheck, Wallet, ShieldAlert, TrendingUp, MessageSquare, SlidersHorizontal, Wrench, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockWorkflows } from '@/components/project-core/data';
 import { cn } from '@/lib/utils';
