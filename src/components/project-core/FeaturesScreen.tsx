@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type FeatureSection } from "./data";
 import { usePlatform } from "@/lib/platform/context";
@@ -16,6 +16,10 @@ export function FeaturesScreen() {
   const setSectionEnabled = (fn: (p: Record<string, boolean>) => Record<string, boolean>) =>
     setState((s) => ({ ...s, enabled: fn(s.enabled) }));
   const [open, setOpen] = useState<string[]>(["dashboard"]);
+  const [q, setQ] = useState("");
+  const ql = q.trim().toLowerCase();
+  const matches = (s: FeatureSection) =>
+    !ql || s.name.toLowerCase().includes(ql) || s.items.some((it) => it.name.toLowerCase().includes(ql));
 
   const toggleItem = (sid: string, idx: number, v: boolean) =>
     setSections((prev) =>
@@ -28,9 +32,14 @@ export function FeaturesScreen() {
 
   return (
     <div className="space-y-3">
-      {sections.map((section) => {
+      <label className="relative block w-72">
+        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search features" aria-label="Search features" className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none focus:border-primary" />
+      </label>
+      {ql && !sections.some(matches) && <p className="text-sm text-muted-foreground">No features match "{q}".</p>}
+      {sections.filter(matches).map((section) => {
         const active = sectionEnabled[section.id] !== false;
-        const expanded = active && open.includes(section.id);
+        const expanded = active && (!!ql || open.includes(section.id));
         const count = section.items.filter((i) => i.enabled).length;
         const Icon = section.icon;
         return (
@@ -76,7 +85,7 @@ export function FeaturesScreen() {
 
             {expanded && (
               <div className="grid gap-2 border-t border-border p-4 md:grid-cols-2">
-                {section.items.map((item, i) => (
+                {section.items.map((item, i) => (!ql || section.name.toLowerCase().includes(ql) || item.name.toLowerCase().includes(ql)) && (
                   <div
                     key={item.name}
                     role="button"
